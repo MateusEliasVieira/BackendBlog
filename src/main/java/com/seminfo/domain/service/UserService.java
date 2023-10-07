@@ -7,4 +7,5 @@ import java.util.List;
 public interface UserService {
     public User save(User user);
     public List<User> fetchAll();
+    public User login(User user);
 }

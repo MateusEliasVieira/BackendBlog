@@ -22,4 +22,11 @@ public class UserServiceImpl implements UserService {
     public List<User> fetchAll() {
         return repo.findAll();
     }
+
+    public User login(User user)
+    {
+        return repo.
+                findByUserAndPassword(user.getUsername(),user.getPassword());
+
+    }
 }
