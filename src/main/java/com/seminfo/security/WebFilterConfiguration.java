@@ -58,6 +58,7 @@ public class WebFilterConfiguration {
 
 		http.authorizeHttpRequests((auth) -> auth
 				.requestMatchers(HttpMethod.POST, "/login/enter").permitAll()
+				.requestMatchers(HttpMethod.POST, "/posts/new").permitAll()
 				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
 				.anyRequest().authenticated());
 

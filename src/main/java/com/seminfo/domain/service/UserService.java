@@ -8,4 +8,5 @@ public interface UserService {
     public User save(User user);
     public List<User> fetchAll();
     public User login(User user);
+    public User findUser(Long idUser);
 }

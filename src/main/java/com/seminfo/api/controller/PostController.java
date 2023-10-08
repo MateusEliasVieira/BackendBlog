@@ -24,6 +24,7 @@ public class PostController {
 
     @GetMapping("/all")
     public ResponseEntity<List<PostOutput>> getPosts(){
+        System.out.println("Entrou aqui");
         List<PostOutput> list = new ArrayList<PostOutput>();
         service.fetchAll().forEach((post)->{
             list.add(map.map(post,PostOutput.class));

@@ -12,7 +12,7 @@ public class PostOutput {
     private String content;
     private Date datePublish;
     private String image;
-    private User user;
+    private UserOutput user;
 
     public Long getIdPost() {
         return idPost;
@@ -55,11 +55,11 @@ public class PostOutput {
         this.image = image;
     }
 
-    public User getUser() {
+    public UserOutput getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserOutput user) {
         this.user = user;
     }
 }
