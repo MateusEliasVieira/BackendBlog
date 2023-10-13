@@ -13,7 +13,7 @@ public class Post {
     private String title;
     @Column(columnDefinition = "text", nullable = false)
     private String content;
-    private Date datePublish;
+    private Date datePublish = new Date();
     @Column(columnDefinition = "text")
     private String image;
 
