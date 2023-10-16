@@ -25,9 +25,8 @@ public class LoginController {
     public ResponseEntity<LoginOutput> enter(@RequestBody LoginInput loginInput){
         User user = map.map(loginInput, User.class);
         User loggedInUser = service.login(user);
-        if(loggedInUser != null) {
-
-            // Exist user and password
+        if(loggedInUser != null && loggedInUser.isStatus()) {
+            // Exist user and password // status is true
             User usuario = new User();
             user.setUsername(loggedInUser.getUsername());
 

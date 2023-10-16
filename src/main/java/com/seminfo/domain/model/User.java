@@ -18,6 +18,9 @@ public class User {
     private String email;
     @Column(columnDefinition = "text")
     private String image;
+    private String token;
+    @Column(nullable = false)
+    private boolean status;
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
@@ -76,6 +79,22 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public List<Post> getPosts() {

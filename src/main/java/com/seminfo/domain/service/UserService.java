@@ -9,4 +9,5 @@ public interface UserService {
     public List<User> fetchAll();
     public User login(User user);
     public User findUser(Long idUser);
+    public boolean confirmAccount(String tokenUrl);
 }

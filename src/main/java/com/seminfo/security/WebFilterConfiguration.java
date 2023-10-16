@@ -57,6 +57,7 @@ public class WebFilterConfiguration {
 		http.csrf((csrf) -> csrf.disable());
 
 		http.authorizeHttpRequests((auth) -> auth
+				.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/login/enter").permitAll()
 				.requestMatchers(HttpMethod.POST, "/posts/new").permitAll()
 				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()

@@ -21,7 +21,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> fetchAll() {
-        return repo.findAll();
+        return repo.findAllByOrderByDatePublishDesc();
     }
 
     @Override
