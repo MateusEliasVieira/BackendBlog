@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<Post> fetchAllWithPagination(int numberPage) {
+        //Sort sort = Sort.by("datePublish").descending(); // ordenation by recent date publish
+        //Pageable pageable = PageRequest.of(numberPage,PAGE_SIZE,sort);
         Pageable pageable = PageRequest.of(numberPage,PAGE_SIZE);
         return repo.findAll(pageable);
     }
