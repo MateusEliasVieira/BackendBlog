@@ -1,13 +1,14 @@
 package com.seminfo.api.controller;
 
 import com.seminfo.api.model.Message;
+import com.seminfo.api.model.PaginationPost;
 import com.seminfo.api.model.PostInput;
 import com.seminfo.api.model.PostOutput;
 import com.seminfo.domain.model.Post;
 import com.seminfo.domain.service.PostService;
-import com.seminfo.domain.service.impl.PostServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,21 @@ public class PostController {
             list.add(map.map(post,PostOutput.class));
         });
         return new ResponseEntity<List<PostOutput>>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/page/{page}")
+    public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage){
+        Page<Post> pages = service.fetchAllWithPagination(numberPage);
+        List<PostOutput> list = new ArrayList<PostOutput>();
+        PaginationPost paginationPost = new PaginationPost();
+        pages.forEach((post)->{
+            PostOutput postOutput = map.map(post,PostOutput.class);
+            list.add(postOutput);
+        });
+        paginationPost.setListPostsOutput(list);
+        paginationPost.setQtdPosts(pages.getTotalElements());
+        paginationPost.setQtdPages(pages.getTotalPages());
+        return new ResponseEntity<PaginationPost>(paginationPost, HttpStatus.OK);
     }
 
     @PostMapping("/new")
