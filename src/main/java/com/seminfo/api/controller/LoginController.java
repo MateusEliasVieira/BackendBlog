@@ -1,6 +1,7 @@
 package com.seminfo.api.controller;
 
 import com.seminfo.api.model.LoginInput;
+import com.seminfo.api.model.LoginInputGoogle;
 import com.seminfo.api.model.LoginOutput;
 import com.seminfo.domain.model.User;
 import com.seminfo.security.TokenUtil;
@@ -16,22 +17,38 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/login")
-public class LoginController {
+public class LoginController
+{
 
     private ModelMapper map = new ModelMapper();
     @Autowired
     private UserService service;
     @PostMapping("/enter")
-    public ResponseEntity<LoginOutput> enter(@RequestBody LoginInput loginInput){
+    public ResponseEntity<LoginOutput> enter(@RequestBody LoginInput loginInput)
+    {
         User user = map.map(loginInput, User.class);
         User loggedInUser = service.login(user);
-        if(loggedInUser != null && loggedInUser.isStatus()) {
+        if(loggedInUser != null && loggedInUser.isStatus())
+        {
             // Exist user and password // status is true
-            User usuario = new User();
-            user.setUsername(loggedInUser.getUsername());
 
-            String token = TokenUtil.getToken(usuario);
-            LoginOutput loginOutput = new LoginOutput(loggedInUser.getIdUser(),token);
+            LoginOutput loginOutput = new LoginOutput(loggedInUser.getIdUser(),loggedInUser.getToken());
+
+            return new ResponseEntity<LoginOutput>(loginOutput,HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<LoginOutput>((LoginOutput) null,HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<LoginOutput> enterWithGoogle(@RequestBody LoginInputGoogle loginInputGoogle)
+    {
+        User user = map.map(loginInputGoogle, User.class);
+        User loggedInUser = service.loginWithGoogle(user);
+        if(loggedInUser != null && loggedInUser.isStatus())
+        {
+            // Exist email and password // status is true
+
+            LoginOutput loginOutput = new LoginOutput(loggedInUser.getIdUser(),loggedInUser.getToken());
 
             return new ResponseEntity<LoginOutput>(loginOutput,HttpStatus.ACCEPTED);
         }

@@ -11,6 +11,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 @Service
 public class EmailSenderServiceImpl implements EmailSenderService {
 
@@ -29,9 +31,15 @@ public class EmailSenderServiceImpl implements EmailSenderService {
         helper.setTo(to);
         helper.setSubject("Account confirmation");
 
+        // Codificando a string para Base64
+        byte[] encodedBytes = Base64.getEncoder().encode(token.getBytes());
+
+        // Convertendo os bytes codificados de volta para uma string
+        String tokenBase64String = new String(encodedBytes);
+
         // Use HTML para criar um link estilizado
         String htmlContent = "<p>Please click the link below to validate your email and create your account</p>" +
-                             "<p><a href=\"http://localhost:8080/email/confirmation/" + token + "\" style=\"color: #007BFF; text-decoration: none;\">Confirmar!</a></p>";
+                             "<p><a href=\"http://localhost:5173/confirmation?token=" + tokenBase64String + "\" style=\"color: #007BFF; text-decoration: none;\">Confirmar!</a></p>";
         helper.setText(htmlContent, true);
 
         javaMailSender.send(mimeMessage);

@@ -18,28 +18,37 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
-public class PostController {
+public class PostController
+{
 
     @Autowired
     private PostService service;
     private ModelMapper map = new ModelMapper();
 
+    @GetMapping("/test-controller")
+    public ResponseEntity<Boolean> getTest(){
+        return new ResponseEntity<Boolean>(true,HttpStatus.ACCEPTED);
+    }
     @GetMapping("/all")
-    public ResponseEntity<List<PostOutput>> getPosts(){
+    public ResponseEntity<List<PostOutput>> getPosts()
+    {
         System.out.println("Entrou aqui");
         List<PostOutput> list = new ArrayList<PostOutput>();
-        service.fetchAll().forEach((post)->{
+        service.fetchAll().forEach((post) ->
+        {
             list.add(map.map(post,PostOutput.class));
         });
         return new ResponseEntity<List<PostOutput>>(list, HttpStatus.OK);
     }
 
     @GetMapping("/page/{page}")
-    public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage){
+    public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage)
+    {
         Page<Post> pages = service.fetchAllWithPagination(numberPage);
         List<PostOutput> list = new ArrayList<PostOutput>();
         PaginationPost paginationPost = new PaginationPost();
-        pages.forEach((post)->{
+        pages.forEach((post) ->
+        {
             PostOutput postOutput = map.map(post,PostOutput.class);
             list.add(postOutput);
         });
@@ -50,13 +59,17 @@ public class PostController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Message> newPost(@RequestBody PostInput postInput){
+    public ResponseEntity<Message> newPost(@RequestBody PostInput postInput)
+    {
         Message message = new Message();
         HttpStatus status = null;
-        if(service.save(map.map(postInput, Post.class)) != null){
+        if(service.save(map.map(postInput, Post.class)) != null)
+        {
             message.setMessage("Post completed successfully!");
             status = HttpStatus.CREATED;
-        }else{
+        }
+        else
+        {
             message.setMessage("Error while posting!");
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
@@ -65,14 +78,18 @@ public class PostController {
 
     @GetMapping("/read-post/{idPost}")
     @ResponseBody
-    public ResponseEntity<PostOutput> readPost(@PathVariable Long idPost){
+    public ResponseEntity<PostOutput> readPost(@PathVariable Long idPost)
+    {
         HttpStatus status = null;
         Post post = service.findPostById(idPost);
         PostOutput postOutput = null;
-        if(post != null){
+        if(post != null)
+        {
             status = HttpStatus.OK;
             postOutput = map.map(post,PostOutput.class);
-        }else{
+        }
+        else
+        {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<PostOutput>(postOutput,status);

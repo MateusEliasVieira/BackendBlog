@@ -15,6 +15,7 @@ public class User {
     @Column(nullable = false)
     private String password;
     private String about;
+    @Column(unique = true)
     private String email;
     @Column(columnDefinition = "text")
     private String image;

@@ -59,7 +59,7 @@ public class WebFilterConfiguration {
 		http.authorizeHttpRequests((auth) -> auth
 				.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/login/enter").permitAll()
-				.requestMatchers(HttpMethod.POST, "/posts/new").permitAll()
+				.requestMatchers(HttpMethod.POST, "/login/google").permitAll()
 				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
 				.anyRequest().authenticated());
 
