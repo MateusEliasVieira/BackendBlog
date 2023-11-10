@@ -1,6 +1,5 @@
-package com.seminfo.domain.model;
+package com.seminfo.api.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -11,24 +10,20 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Post {
+public class PostOutputDTO {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long idPost;
     @NotBlank
     private String title;
     @NotBlank
-    @Column(columnDefinition = "text")
     private String content;
     @NotNull
     private Date datePublish;
     @NotBlank
-    @Column(columnDefinition = "text")
     private String image;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NotNull
+    private UserOutputDTO userOutputDTO;
 
 }

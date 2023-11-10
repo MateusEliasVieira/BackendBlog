@@ -1,17 +1,19 @@
-package com.seminfo.api.model;
+package com.seminfo.api.dto.others;
+
+import com.seminfo.api.dto.PostOutputDTO;
 
 import java.util.List;
 
 public class PaginationPost {
-    private List<PostOutput> listPostsOutput;
+    private List<PostOutputDTO> listPostsOutput;
     private int qtdPages;
     private Long qtdPosts;
 
-    public List<PostOutput> getListPostsOutput() {
+    public List<PostOutputDTO> getListPostsOutput() {
         return listPostsOutput;
     }
 
-    public void setListPostsOutput(List<PostOutput> listPostsOutput) {
+    public void setListPostsOutput(List<PostOutputDTO> listPostsOutput) {
         this.listPostsOutput = listPostsOutput;
     }
 

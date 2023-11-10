@@ -1,4 +1,4 @@
-package com.seminfo.api.model;
+package com.seminfo.api.dto.others;
 
 public class Message {
     private String message;

@@ -1,12 +1,8 @@
 package com.seminfo.api.controller;
 
-import com.seminfo.api.model.EmailInput;
-import com.seminfo.api.model.EmailOutput;
-import com.seminfo.api.model.Message;
+import com.seminfo.api.dto.others.Message;
 import com.seminfo.domain.model.User;
-import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

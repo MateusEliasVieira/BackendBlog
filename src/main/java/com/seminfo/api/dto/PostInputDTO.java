@@ -1,34 +1,26 @@
-package com.seminfo.domain.model;
+package com.seminfo.api.dto;
 
-import jakarta.persistence.*;
+import com.seminfo.domain.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class Post {
+public class PostInputDTO {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idPost;
     @NotBlank
     private String title;
     @NotBlank
-    @Column(columnDefinition = "text")
     private String content;
     @NotNull
-    private Date datePublish;
+    private Date datePublish = new Date();
     @NotBlank
-    @Column(columnDefinition = "text")
     private String image;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
 }

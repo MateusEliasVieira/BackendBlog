@@ -1,10 +1,10 @@
 package com.seminfo.api.controller;
 
-import com.seminfo.api.model.LoginInput;
-import com.seminfo.api.model.LoginInputGoogle;
-import com.seminfo.api.model.LoginOutput;
+import com.seminfo.api.dto.LoginInputDTO;
+import com.seminfo.api.dto.LoginInputGoogleDTO;
+import com.seminfo.api.dto.LoginOutputDTO;
+import com.seminfo.api.mapper.LoginMapper;
 import com.seminfo.domain.model.User;
-import com.seminfo.security.TokenUtil;
 import com.seminfo.domain.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,38 +20,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController
 {
 
-    private ModelMapper map = new ModelMapper();
     @Autowired
     private UserService service;
     @PostMapping("/enter")
-    public ResponseEntity<LoginOutput> enter(@RequestBody LoginInput loginInput)
+    public ResponseEntity<LoginOutputDTO> enter(@RequestBody LoginInputDTO loginInputDTO)
     {
-        User user = map.map(loginInput, User.class);
+        User user = LoginMapper.mapperLoginInputDTOToUser(loginInputDTO);
         User loggedInUser = service.login(user);
         if(loggedInUser != null && loggedInUser.isStatus())
         {
             // Exist user and password // status is true
 
-            LoginOutput loginOutput = new LoginOutput(loggedInUser.getIdUser(),loggedInUser.getToken());
+            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(),loggedInUser.getToken());
 
-            return new ResponseEntity<LoginOutput>(loginOutput,HttpStatus.ACCEPTED);
+            return new ResponseEntity<LoginOutputDTO>(loginOutputDTO,HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<LoginOutput>((LoginOutput) null,HttpStatus.NO_CONTENT);
+        return new ResponseEntity<LoginOutputDTO>((LoginOutputDTO) null,HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/google")
-    public ResponseEntity<LoginOutput> enterWithGoogle(@RequestBody LoginInputGoogle loginInputGoogle)
+    public ResponseEntity<LoginOutputDTO> enterWithGoogle(@RequestBody LoginInputGoogleDTO loginInputGoogleDTO)
     {
-        User user = map.map(loginInputGoogle, User.class);
+        User user = LoginMapper.mapperLoginInputGoogleDTOToUser(loginInputGoogleDTO);
         User loggedInUser = service.loginWithGoogle(user);
         if(loggedInUser != null && loggedInUser.isStatus())
         {
             // Exist email and password // status is true
 
-            LoginOutput loginOutput = new LoginOutput(loggedInUser.getIdUser(),loggedInUser.getToken());
+            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(),loggedInUser.getToken());
 
-            return new ResponseEntity<LoginOutput>(loginOutput,HttpStatus.ACCEPTED);
+            return new ResponseEntity<LoginOutputDTO>(loginOutputDTO,HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<LoginOutput>((LoginOutput) null,HttpStatus.NO_CONTENT);
+        return new ResponseEntity<LoginOutputDTO>((LoginOutputDTO) null,HttpStatus.NO_CONTENT);
     }
 }

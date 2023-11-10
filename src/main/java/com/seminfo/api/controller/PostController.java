@@ -1,9 +1,10 @@
 package com.seminfo.api.controller;
 
-import com.seminfo.api.model.Message;
-import com.seminfo.api.model.PaginationPost;
-import com.seminfo.api.model.PostInput;
-import com.seminfo.api.model.PostOutput;
+import com.seminfo.api.dto.others.Message;
+import com.seminfo.api.dto.others.PaginationPost;
+import com.seminfo.api.dto.PostInputDTO;
+import com.seminfo.api.dto.PostOutputDTO;
+import com.seminfo.api.mapper.PostMapper;
 import com.seminfo.domain.model.Post;
 import com.seminfo.domain.service.PostService;
 import org.modelmapper.ModelMapper;
@@ -23,35 +24,25 @@ public class PostController
 
     @Autowired
     private PostService service;
-    private ModelMapper map = new ModelMapper();
 
     @GetMapping("/test-controller")
     public ResponseEntity<Boolean> getTest(){
         return new ResponseEntity<Boolean>(true,HttpStatus.ACCEPTED);
     }
     @GetMapping("/all")
-    public ResponseEntity<List<PostOutput>> getPosts()
+    public ResponseEntity<List<PostOutputDTO>> getPosts()
     {
         System.out.println("Entrou aqui");
-        List<PostOutput> list = new ArrayList<PostOutput>();
-        service.fetchAll().forEach((post) ->
-        {
-            list.add(map.map(post,PostOutput.class));
-        });
-        return new ResponseEntity<List<PostOutput>>(list, HttpStatus.OK);
+        List<PostOutputDTO> list = PostMapper.mapperListPostToListPostOutputDTO(service.fetchAll());
+        return new ResponseEntity<List<PostOutputDTO>>(list, HttpStatus.OK);
     }
 
     @GetMapping("/page/{page}")
     public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage)
     {
         Page<Post> pages = service.fetchAllWithPagination(numberPage);
-        List<PostOutput> list = new ArrayList<PostOutput>();
+        List<PostOutputDTO> list = PostMapper.mapperListPostToListPostOutputDTO(pages.toList());
         PaginationPost paginationPost = new PaginationPost();
-        pages.forEach((post) ->
-        {
-            PostOutput postOutput = map.map(post,PostOutput.class);
-            list.add(postOutput);
-        });
         paginationPost.setListPostsOutput(list);
         paginationPost.setQtdPosts(pages.getTotalElements());
         paginationPost.setQtdPages(pages.getTotalPages());
@@ -59,11 +50,12 @@ public class PostController
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Message> newPost(@RequestBody PostInput postInput)
+    public ResponseEntity<Message> newPost(@RequestBody PostInputDTO postInputDTO)
     {
         Message message = new Message();
         HttpStatus status = null;
-        if(service.save(map.map(postInput, Post.class)) != null)
+
+        if(service.save( PostMapper.mapperPostInputDTOToPost(postInputDTO) ) != null)
         {
             message.setMessage("Post completed successfully!");
             status = HttpStatus.CREATED;
@@ -78,21 +70,21 @@ public class PostController
 
     @GetMapping("/read-post/{idPost}")
     @ResponseBody
-    public ResponseEntity<PostOutput> readPost(@PathVariable Long idPost)
+    public ResponseEntity<PostOutputDTO> readPost(@PathVariable Long idPost)
     {
         HttpStatus status = null;
         Post post = service.findPostById(idPost);
-        PostOutput postOutput = null;
+        PostOutputDTO postOutputDTO = null;
         if(post != null)
         {
             status = HttpStatus.OK;
-            postOutput = map.map(post,PostOutput.class);
+            postOutputDTO = PostMapper.mapperPostToPostOutputDTO(post);
         }
         else
         {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<PostOutput>(postOutput,status);
+        return new ResponseEntity<PostOutputDTO>(postOutputDTO,status);
     }
 
 }
