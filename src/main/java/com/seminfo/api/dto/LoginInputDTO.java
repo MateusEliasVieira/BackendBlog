@@ -8,12 +8,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginInputDTO {
+public class LoginInputDTO
+{
 
     @NotBlank
     private String username;
     @NotBlank
-    @Size(min = 6, max = 20)
+    @Size(min = 6)
     private String password;
 
 }

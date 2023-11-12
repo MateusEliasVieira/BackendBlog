@@ -12,7 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Post {
+public class Post
+{
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPost;

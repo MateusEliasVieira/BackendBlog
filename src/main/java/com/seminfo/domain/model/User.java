@@ -1,5 +1,6 @@
 package com.seminfo.domain.model;
 
+import com.seminfo.domain.enums.Permissions;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User {
+public class User
+{
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
     @NotBlank
@@ -22,7 +25,7 @@ public class User {
     @Column(unique = true)
     private String username;
     @NotBlank
-    @Size(min = 6, max = 20)
+    @Size(min = 6)
     private String password;
     @NotBlank
     @Column(columnDefinition = "text")
@@ -42,5 +45,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
+    @Enumerated(EnumType.STRING)
+    private Permissions permission;
 
 }

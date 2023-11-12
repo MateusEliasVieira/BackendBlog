@@ -40,7 +40,9 @@ public class PostController
     @GetMapping("/page/{page}")
     public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage)
     {
+        System.out.println("entrou para buscar post");
         Page<Post> pages = service.fetchAllWithPagination(numberPage);
+        pages.toList().forEach(post -> System.out.println(post.getUser().getName()));
         List<PostOutputDTO> list = PostMapper.mapperListPostToListPostOutputDTO(pages.toList());
         PaginationPost paginationPost = new PaginationPost();
         paginationPost.setListPostsOutput(list);

@@ -10,7 +10,8 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostInputDTO {
+public class PostInputDTO
+{
 
     @NotBlank
     private String title;

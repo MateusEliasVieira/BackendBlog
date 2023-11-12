@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmailOutputDTO {
+public class EmailOutputDTO
+{
 
     @NotBlank
     private String emailSendingResult;

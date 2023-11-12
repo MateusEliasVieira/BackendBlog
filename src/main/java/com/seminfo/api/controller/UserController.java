@@ -58,16 +58,22 @@ public class UserController
     }
 
     @GetMapping ("/find/{idUser}")
-    public ResponseEntity<UserOutputDTO> findUser(@PathVariable Long idUser){
+    public ResponseEntity<UserOutputDTO> findUser(@PathVariable Long idUser)
+    {
         UserOutputDTO userOutputDTO = null;
         HttpStatus status = null;
-        try{
+        try
+        {
             userOutputDTO = UserMapper.mapperUserToUserOutputDTO(service.findUser(idUser));
             status = HttpStatus.OK;
-        }catch (UserNotFoundException error_user){
+        }
+        catch (UserNotFoundException error_user)
+        {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             System.out.println("Error: "+error_user.getMessage());
-        }catch(Exception error_ex){
+        }
+        catch(Exception error_ex)
+        {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             System.out.println("Error: "+error_ex.getMessage());
         }

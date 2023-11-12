@@ -9,7 +9,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginInputGoogleDTO {
+public class LoginInputGoogleDTO
+{
 
     @NotBlank
     @Size(min = 4)
@@ -17,7 +18,7 @@ public class LoginInputGoogleDTO {
     @NotBlank
     private String username;
     @NotBlank()
-    @Size(min = 6, max = 20)
+    @Size(min = 6)
     private String password;
     @NotBlank
     private String about;

@@ -14,25 +14,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-public class WebFilterConfiguration {
+public class WebFilterConfiguration
+{
 
-	/*
-	 * @Bean é usada para indicar que um método específico em uma classe é
-	 * responsável por criar e configurar um objeto que será gerenciado pelo
-	 * contêiner do Spring.
-	 * 
-	 * Ao usar a anotação @Bean, o método anotado é invocado durante a fase de
-	 * inicialização do contêiner do Spring, e o objeto retornado por esse método é
-	 * registrado como um bean no contexto do Spring. Isso permite que o contêiner
-	 * do Spring gerencie o ciclo de vida do objeto, além de fornecer recursos
-	 * adicionais, como injeção de dependência, transações e controle de transação,
-	 * entre outros.
-	 * 
-	 * Resumo: Criamos um objeto para o spring utilizar
-	 */
+	/* Um bean, no contexto do Spring Framework, é simplesmente um objeto gerenciado pelo contêiner Spring. */
 
 	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
+	public CorsConfigurationSource corsConfigurationSource()
+	{
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.addAllowedOrigin("*"); // Permite todas as origens, você pode personalizar isso
 		configuration.addAllowedMethod("GET");
@@ -50,10 +39,9 @@ public class WebFilterConfiguration {
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-		http.cors();//cors ativado
-		
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
+	{
+		http.cors();
 		http.csrf((csrf) -> csrf.disable());
 
 		http.authorizeHttpRequests((auth) -> auth
@@ -63,14 +51,9 @@ public class WebFilterConfiguration {
 				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
 				.anyRequest().authenticated());
 
-		// A classe UsernamePasswordAuthenticationFilter vai obter a authenticação (caso
-		// exista) do contexto de segurança do spring security
-		// e então verificará as roles deste usuario e demais informações passadas na
-		// autenticação para o contexto do spring security, como definimos nessa classe
-		// UsernamePasswordAuthenticationToken auth = new
-		// UsernamePasswordAuthenticationToken("user", null, Collections.emptyList());
 		http.addFilterBefore(new FiltroInterceptador(), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
+
 }

@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 
 @Service
-public class EmailSenderServiceImpl implements EmailSenderService {
+public class EmailSenderServiceImpl implements EmailSenderService
+{
 
     @Value("${spring.mail.username}")
     private String MY_GMAIL;
@@ -23,7 +24,8 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private JavaMailSender javaMailSender;
 
     @Override
-    public void sendEmail(String to,String token) throws MailException, MessagingException {
+    public void sendEmail(String to,String token) throws MailException, MessagingException
+    {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 

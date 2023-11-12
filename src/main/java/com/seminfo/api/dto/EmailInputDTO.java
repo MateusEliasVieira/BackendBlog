@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailInputDTO {
+public class EmailInputDTO
+{
 
     @NotBlank
     private String subject;
