@@ -7,6 +7,7 @@ import com.seminfo.api.dto.PostOutputDTO;
 import com.seminfo.api.mapper.PostMapper;
 import com.seminfo.domain.model.Post;
 import com.seminfo.domain.service.PostService;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +53,7 @@ public class PostController
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Message> newPost(@RequestBody PostInputDTO postInputDTO)
+    public ResponseEntity<Message> newPost(@RequestBody @Valid PostInputDTO postInputDTO)
     {
         Message message = new Message();
         HttpStatus status = null;

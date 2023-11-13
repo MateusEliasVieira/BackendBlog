@@ -1,6 +1,8 @@
 package com.seminfo.domain.service.impl;
 
+import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.EmailSenderService;
+import com.seminfo.domain.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class EmailSenderServiceImpl implements EmailSenderService
 
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private UserRepository repository;
 
     @Override
     public void sendEmail(String to,String token) throws MailException, MessagingException
@@ -47,4 +52,38 @@ public class EmailSenderServiceImpl implements EmailSenderService
         javaMailSender.send(mimeMessage);
 
     }
+
+    @Override
+    public boolean recoverAccount(String to) throws MailException, MessagingException
+    {
+
+        if(repository.findUserByEmail(to) != null)
+        {
+            // exist user
+
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+
+            // Define o destinatário, assunto e o conteúdo HTML do e-mail
+            helper.setTo(to);
+            helper.setSubject("Recover Account");
+
+            // Use HTML para criar um link estilizado
+            String htmlContent = "<h3>Recover account</h3>" +
+                    "<p><a href=\"http://localhost:5173/recover-account?email=" + to + "\" style=\"color: #007BFF; text-decoration: none;\">Recover my account!</a></p>";
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(mimeMessage);
+
+            return true;
+        }
+        else
+        {
+            // not exist user
+            return false;
+        }
+
+    }
+
+
 }

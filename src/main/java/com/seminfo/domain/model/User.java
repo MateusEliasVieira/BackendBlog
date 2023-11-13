@@ -4,6 +4,7 @@ import com.seminfo.domain.enums.Permissions;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class User
     private Long idUser;
     @NotBlank
     @Size(min = 4)
+    @Pattern(regexp = "^[A-Z]+(.)*") // garante que a primeira letra seja maiuscula
     private String name;
     @NotBlank
     @Column(unique = true)

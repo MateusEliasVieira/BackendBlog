@@ -46,6 +46,7 @@ public class WebFilterConfiguration
 
 		http.authorizeHttpRequests((auth) -> auth
 				.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
+				.requestMatchers(HttpMethod.GET, "/email/recover-account/*").permitAll()
 				.requestMatchers(HttpMethod.POST, "/login/enter").permitAll()
 				.requestMatchers(HttpMethod.POST, "/login/google").permitAll()
 				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()

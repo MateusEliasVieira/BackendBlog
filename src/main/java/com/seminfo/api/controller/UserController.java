@@ -8,7 +8,9 @@ import com.seminfo.domain.exception.UserNotFoundException;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
+import com.seminfo.utils.StrongPassword;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,25 +29,35 @@ public class UserController
     private EmailSenderService emailSenderService;
 
     @PostMapping("/new")
-    public ResponseEntity<Message> newUser(@RequestBody UserInputDTO userInputDto)
+    public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto)
     {
         Message message = new Message();
         HttpStatus httpStatus = null;
         try
         {
-            User userSaved = service.save( UserMapper.mapperUserInputDTOToUser(userInputDto) );
-            if(userSaved != null)
-            {
-                emailSenderService.sendEmail(userSaved.getEmail(),userSaved.getToken());
-                message.setMessage("Confirmation email successfully sent to "+userSaved.getEmail());
-                httpStatus = HttpStatus.OK;
+            if(StrongPassword.isStrong(userInputDto.getPassword())){
+                // password is strong
+                User userSaved = service.save( UserMapper.mapperUserInputDTOToUser(userInputDto) );
+                if(userSaved != null)
+                {
+                    emailSenderService.sendEmail(userSaved.getEmail(),userSaved.getToken());
+                    message.setMessage("Confirmation email successfully sent to "+userSaved.getEmail());
+                    httpStatus = HttpStatus.OK;
+                }
+                else
+                {
+                    // not saved
+                    message.setMessage("Ops! There is already a user with this email/username registered!");
+                    httpStatus = HttpStatus.CONFLICT;
+                }
             }
             else
             {
-                // not saved
-                message.setMessage("Ops! There is already a user with this email/username registered!");
-                httpStatus = HttpStatus.CONFLICT;
+                // password not strong
+                message.setMessage("Ops! Your password is not strong! Use letters, numbers and special characters!");
+                httpStatus = HttpStatus.NOT_ACCEPTABLE;
             }
+
 
         }
         catch (MessagingException e)

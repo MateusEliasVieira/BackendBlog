@@ -6,16 +6,17 @@ import com.seminfo.api.dto.LoginOutputDTO;
 import com.seminfo.api.mapper.LoginMapper;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.service.UserService;
+import com.seminfo.utils.Log;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
@@ -26,8 +27,11 @@ public class LoginController
     private UserService service;
 
     @PostMapping("/enter")
-    public ResponseEntity<LoginOutputDTO> enter(@RequestBody LoginInputDTO loginInputDTO)
+    public ResponseEntity<LoginOutputDTO> enter(@RequestBody @Valid LoginInputDTO loginInputDTO, HttpServletRequest request)
     {
+
+        // cria um log da requisição de login
+        Log.createSimpleLog(loginInputDTO,request);
 
         User user = LoginMapper.mapperLoginInputDTOToUser(loginInputDTO);
         User loggedInUser = service.login(user);
@@ -46,8 +50,12 @@ public class LoginController
     }
 
     @PostMapping("/google")
-    public ResponseEntity<LoginOutputDTO> enterWithGoogle(@RequestBody LoginInputGoogleDTO loginInputGoogleDTO)
+    public ResponseEntity<LoginOutputDTO> enterWithGoogle(@RequestBody @Valid LoginInputGoogleDTO loginInputGoogleDTO, HttpServletRequest request)
     {
+
+        // cria um log da requisição de login
+        Log.createGoogleLog(loginInputGoogleDTO,request);
+
         User user = LoginMapper.mapperLoginInputGoogleDTOToUser(loginInputGoogleDTO);
         User loggedInUser = service.loginWithGoogle(user);
         if(loggedInUser != null && loggedInUser.isStatus())
@@ -60,4 +68,6 @@ public class LoginController
         }
         return new ResponseEntity<LoginOutputDTO>((LoginOutputDTO) null,HttpStatus.NO_CONTENT);
     }
+
+
 }
