@@ -9,16 +9,22 @@ import com.seminfo.domain.model.User;
 import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
 import com.seminfo.utils.StrongPassword;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value = "/user", produces = {"application/json"})
+@Tag(name = "user")
 public class UserController
 {
 
@@ -28,7 +34,14 @@ public class UserController
     @Autowired
     private EmailSenderService emailSenderService;
 
-    @PostMapping("/new")
+    @Operation(summary = "Realiza o cadastro de um novo usuário", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Email de confirmação da conta foi enviado com sucesso"),
+            @ApiResponse(responseCode = "409", description = "Já existe um usuário com o devido email/username cadastrado"),
+            @ApiResponse(responseCode = "406", description = "A senha está fraca e deve ser corrigida utilizando letras, números e caracteres especiais"),
+            @ApiResponse(responseCode = "404", description = "Erro ao enviar email de confirmação"),
+    })
+    @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto)
     {
         Message message = new Message();
