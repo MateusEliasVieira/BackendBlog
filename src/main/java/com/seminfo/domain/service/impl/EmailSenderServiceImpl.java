@@ -1,8 +1,10 @@
 package com.seminfo.domain.service.impl;
 
+import com.seminfo.domain.model.User;
 import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
+import com.seminfo.security.TokenUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +58,9 @@ public class EmailSenderServiceImpl implements EmailSenderService
     @Override
     public boolean recoverAccount(String to) throws MailException, MessagingException
     {
+        User user  = repository.findUserByEmail(to);
 
-        if(repository.findUserByEmail(to) != null)
+        if(user != null)
         {
             // exist user
 
@@ -68,9 +71,14 @@ public class EmailSenderServiceImpl implements EmailSenderService
             helper.setTo(to);
             helper.setSubject("Recover Account");
 
+            String newToken = TokenUtil.getToken(user); // gerar novo token
+            user.setToken(newToken); // atualizar token do usuario
+            User userUpdateWithNewToken = repository.save(user); // salvar mudanças
+            String token = userUpdateWithNewToken.getToken(); // obter o token atualizado
+
             // Use HTML para criar um link estilizado
             String htmlContent = "<h3>Recover account</h3>" +
-                    "<p><a href=\"http://localhost:5173/recover-account?email=" + to + "\" style=\"color: #007BFF; text-decoration: none;\">Recover my account!</a></p>";
+                    "<p><a href=\"http://localhost:5173/new-password?token=" + token + "\" style=\"color: #007BFF; text-decoration: none;\">Recover my account!</a></p>";
             helper.setText(htmlContent, true);
 
             javaMailSender.send(mimeMessage);

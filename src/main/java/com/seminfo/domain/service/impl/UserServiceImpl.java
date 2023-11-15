@@ -1,5 +1,6 @@
 package com.seminfo.domain.service.impl;
 
+import com.seminfo.api.dto.NewPasswordInputDTO;
 import com.seminfo.domain.enums.Permissions;
 import com.seminfo.domain.exception.UserNotFoundException;
 import com.seminfo.domain.model.User;
@@ -74,13 +75,11 @@ public class UserServiceImpl implements UserService
         User userLogin = repository.findUserByUsername(user.getUsername());
         if(userLogin != null && passwordEncoder.matches(user.getPassword(), userLogin.getPassword()))
         {
-            System.out.println("OK");
             userLogin.setToken(TokenUtil.getToken(userLogin));
             return repository.save(userLogin);
         }
         else
         {
-            System.out.println("Nao deu para encontrar o usuario");
             return null;
         }
     }
@@ -90,10 +89,8 @@ public class UserServiceImpl implements UserService
     public User loginWithGoogle(User user)
     {
         User userLoginWithGoogle = repository.findAccountGoogleByEmail(user.getEmail());
-        System.out.println("senha = "+passwordEncoder.encode(user.getPassword()));
         if(userLoginWithGoogle==null)
         {
-            System.out.println("nao tem conta");
             // empty user
             String firstTokenUser = TokenUtil.getToken(user);
             user.setToken(firstTokenUser);
@@ -103,7 +100,6 @@ public class UserServiceImpl implements UserService
         }
         else if(passwordEncoder.matches(user.getPassword(),userLoginWithGoogle.getPassword()))
         {
-            System.out.println("tem conta");
             // exist user. Update Token
             userLoginWithGoogle.setToken(TokenUtil.getToken(userLoginWithGoogle));
             return repository.save(userLoginWithGoogle);
@@ -135,6 +131,11 @@ public class UserServiceImpl implements UserService
         }
     }
 
-
-
+    @Transactional(readOnly = false)
+    @Override
+    public User updatePassword(NewPasswordInputDTO newPasswordInputDTO) {
+        User user = repository.findUserByToken(newPasswordInputDTO.getToken());
+        user.setPassword(passwordEncoder.encode(newPasswordInputDTO.getNewpassword()));
+        return repository.save(user);
+    }
 }

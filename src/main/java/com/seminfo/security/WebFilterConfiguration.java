@@ -59,7 +59,7 @@ public class WebFilterConfiguration
 				.httpBasic(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests((auth) -> auth
 				.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
-				.requestMatchers(HttpMethod.GET, "/email/recover-account/*").permitAll()
+				.requestMatchers(HttpMethod.GET, "/recover/recover-account/*").permitAll()
 				.requestMatchers(HttpMethod.GET,DOCUMENTATION_OPENAPI).permitAll() // swagger url
 				.requestMatchers(HttpMethod.POST, "/login/enter").permitAll()
 				.requestMatchers(HttpMethod.POST, "/login/google").permitAll()

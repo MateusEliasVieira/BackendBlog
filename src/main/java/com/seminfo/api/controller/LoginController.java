@@ -29,14 +29,11 @@ public class LoginController
     @PostMapping("/enter")
     public ResponseEntity<LoginOutputDTO> enter(@RequestBody @Valid LoginInputDTO loginInputDTO, HttpServletRequest request)
     {
-
         // cria um log da requisição de login
         Log.createSimpleLog(loginInputDTO,request);
 
         User user = LoginMapper.mapperLoginInputDTOToUser(loginInputDTO);
         User loggedInUser = service.login(user);
-
-        System.out.println("id "+loggedInUser.getIdUser()+", Usuario = "+loggedInUser.getName());
 
         if(loggedInUser != null && loggedInUser.isStatus())
         {

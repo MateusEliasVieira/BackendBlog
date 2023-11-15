@@ -1,5 +1,6 @@
 package com.seminfo.domain.service;
 
+import com.seminfo.api.dto.NewPasswordInputDTO;
 import com.seminfo.domain.model.User;
 
 import java.util.List;
@@ -11,5 +12,6 @@ public interface UserService {
     public User login(User user);
     public User loginWithGoogle(User user);
     public User findUser(Long idUser);
+    public User updatePassword(NewPasswordInputDTO newPasswordInputDTO);
     public boolean confirmAccount(String tokenUrl);
 }
