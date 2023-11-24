@@ -7,15 +7,14 @@ import com.seminfo.api.dto.PostOutputDTO;
 import com.seminfo.api.mapper.PostMapper;
 import com.seminfo.domain.model.Post;
 import com.seminfo.domain.service.PostService;
+import com.seminfo.utils.Feedback;
 import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -58,12 +57,12 @@ public class PostController
 
         if(service.save( PostMapper.mapperPostInputDTOToPost(postInputDTO) ) != null)
         {
-            message.setMessage("Post completed successfully!");
+            message.setMessage(Feedback.POST_COMPLETED);
             status = HttpStatus.CREATED;
         }
         else
         {
-            message.setMessage("Error while posting!");
+            message.setMessage(Feedback.ERROR_POST);
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
         return new ResponseEntity<Message>(message,status);

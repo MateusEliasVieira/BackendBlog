@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>
@@ -24,4 +27,22 @@ public interface UserRepository extends JpaRepository<User,Long>
 
     @Query("SELECT u FROM User u WHERE u.token = :token")
     public User findUserByToken(@Param("token") String token);
+
+    @Modifying
+    @Query("UPDATE User u SET u.attempts = :attempts WHERE u.username = :username")
+    public void updateAttemptsUser(@Param("attempts") int attempts, @Param("username") String username);
+
+    @Query("SELECT u.attempts FROM User u WHERE u.username = :username")
+    public int attemptsUser(@Param("username") String username);
+
+    @Modifying
+    @Query("UPDATE User u SET u.releaseLogin = :releaseDate WHERE u.username = :username")
+    public void updateReleaseDate(@Param("releaseDate") Date releaseDate, @Param("username") String username);
+
+    @Query("SELECT u.releaseLogin FROM User u WHERE u.username = :username")
+    public Date getDateReleaseLogin(@Param("username") String username);
+    @Modifying
+    @Query("UPDATE User u SET u.releaseLogin = null, u.attempts = 0 WHERE u.username = :username")
+    public void resetAttemptsAndReleaseLogin(@Param("username") String username);
+
 }

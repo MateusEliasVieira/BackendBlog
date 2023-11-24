@@ -1,6 +1,10 @@
 package com.seminfo.domain.service.impl;
 
+import com.seminfo.api.dto.LoginInputDTO;
+import com.seminfo.api.dto.LoginOutputDTO;
 import com.seminfo.api.dto.NewPasswordInputDTO;
+import com.seminfo.api.dto.others.Message;
+import com.seminfo.api.mapper.LoginMapper;
 import com.seminfo.domain.enums.Permissions;
 import com.seminfo.domain.exception.UserNotFoundException;
 import com.seminfo.domain.model.User;
@@ -8,11 +12,16 @@ import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.UserService;
 import com.seminfo.security.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +33,8 @@ public class UserServiceImpl implements UserService
     private UserRepository repository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private final int MINUTES_TO_RETRY = 1;
 
     @Transactional(readOnly = false)
     @Override
@@ -76,6 +87,8 @@ public class UserServiceImpl implements UserService
         if(userLogin != null && passwordEncoder.matches(user.getPassword(), userLogin.getPassword()))
         {
             userLogin.setToken(TokenUtil.getToken(userLogin));
+            userLogin.setAttempts(0);
+            userLogin.setReleaseLogin(null);
             return repository.save(userLogin);
         }
         else
@@ -116,6 +129,59 @@ public class UserServiceImpl implements UserService
        return userOptional.isPresent() ? userOptional.get() : userOptional.orElseThrow(() -> new UserNotFoundException("User not found!"));
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Boolean findUser(String username)
+    {
+        Optional<User> userOptional = Optional.ofNullable(repository.findUserByUsername(username));
+        return userOptional.isPresent();
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public int updateAttempts(String username) {
+        int attempts = repository.attemptsUser(username) + 1;
+        repository.updateAttemptsUser(attempts,username);
+        return repository.attemptsUser(username);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public int attemptsUser(String username) {
+        return repository.attemptsUser(username);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public Date releaseLogin(String username){
+        // get current date and time
+        LocalDateTime now = LocalDateTime.now();
+        // Add minutes
+        LocalDateTime minutes = now.plusMinutes(MINUTES_TO_RETRY);
+        // release date
+        Date releaseDate = Date.from(minutes.toInstant(ZoneOffset.of("-03:00")));
+        repository.updateReleaseDate(releaseDate,username);
+        return releaseDate;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Date getDateReleaseLogin(String username){
+        return repository.getDateReleaseLogin(username);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Boolean verifyReleaseDateLogin(String username) {
+        return repository.getDateReleaseLogin(username) != null;
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void resetAttemptsAndReleaseLogin(String username) {
+        repository.resetAttemptsAndReleaseLogin(username);
+    }
+
     @Transactional(readOnly = false)
     @Override
     public boolean confirmAccount(String tokenUrl)
@@ -138,4 +204,6 @@ public class UserServiceImpl implements UserService
         user.setPassword(passwordEncoder.encode(newPasswordInputDTO.getNewpassword()));
         return repository.save(user);
     }
+
+
 }

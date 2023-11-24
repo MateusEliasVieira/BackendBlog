@@ -13,7 +13,6 @@ public class SpringDocOpenApiConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
-                //.components(new Components().addSecuritySchemes("security", securityScheme()))
                 .info(
                         new Info()
                                 .title("REST API - Spring")
@@ -22,15 +21,6 @@ public class SpringDocOpenApiConfig {
                                 .license(new License().name("Apache 2.0").url("https://www.apache.org/licenses/LICENSE-2.0"))
                                 .contact(new Contact().name("Mateus Elias Vieira").email("mateus.vieira@estudante.ifgoiano.edu.br"))
                 );
-    }
-    private SecurityScheme securityScheme() {
-            return new SecurityScheme()
-                    .description("Insira um bearer token válido para prosseguir")
-                    .type(SecurityScheme.Type.HTTP)
-                    .in(SecurityScheme.In.HEADER)
-                    .scheme("bearer")
-                    .bearerFormat("JWT")
-                    .name("security");
     }
 
 }

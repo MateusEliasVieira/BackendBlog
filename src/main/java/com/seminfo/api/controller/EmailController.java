@@ -2,10 +2,8 @@ package com.seminfo.api.controller;
 
 import com.seminfo.api.dto.others.Message;
 import com.seminfo.domain.model.User;
-import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
-import jakarta.mail.MessagingException;
-import jakarta.validation.constraints.Email;
+import com.seminfo.utils.Feedback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +30,12 @@ public class EmailController
         if(userConfirmed != null)
         {
             // saved
-            message.setMessage("Account confirmed successfully!");
+            message.setMessage(Feedback.ACCOUNT_CONFIRMED);
             return new ResponseEntity<Message>(message, HttpStatus.OK);
         }
         else
         {
-            message.setMessage("Error when confirming account!");
+            message.setMessage(Feedback.ERROR_ACCOUNT_CONFIRMED);
             return new ResponseEntity<Message>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
