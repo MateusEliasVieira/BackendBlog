@@ -23,7 +23,7 @@ public class EmailController
     public ResponseEntity<Message> confirmMyCountByReceiveEmail(@PathVariable("token") String token)
     {
         Message message = new Message();
-        // Decodificando a string Base64
+        // Decode the string Base64
         byte[] decodedBytes = Base64.getDecoder().decode(token);
         String tokenDecodedString = new String(decodedBytes);
         User userConfirmed = service.saveUserAfterConfirmedAccountByEmail(tokenDecodedString);

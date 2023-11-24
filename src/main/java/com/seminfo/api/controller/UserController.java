@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping(value = "/user", produces = {"application/json"})
@@ -30,12 +32,16 @@ public class UserController
     private EmailSenderService emailSenderService;
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto)
+    public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto, Errors errors)
     {
         Message message = new Message();
         HttpStatus httpStatus = null;
         try
         {
+            if(errors.hasErrors()){
+                System.out.println(errors.getAllErrors());
+            }
+
             if(StrongPassword.isStrong(userInputDto.getPassword())){
                 // password is strong
                 User userSaved = service.save( UserMapper.mapperUserInputDTOToUser(userInputDto) );
@@ -65,7 +71,10 @@ public class UserController
         {
             httpStatus = HttpStatus.NOT_FOUND;
             message.setMessage(Feedback.ERROR_SEND_CONF_EMAIL + userInputDto.getEmail());
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
+        }
+        catch(Exception e){
+            System.out.println("erro = "+e.getMessage());
         }
         return new ResponseEntity<Message>(message,httpStatus);
     }

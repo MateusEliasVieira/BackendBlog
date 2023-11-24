@@ -42,9 +42,8 @@ public class PostServiceImpl implements PostService
     @Override
     public Page<Post> fetchAllWithPagination(int numberPage)
     {
-        //Sort sort = Sort.by("datePublish").descending(); // ordenation by recent date publish
-        //Pageable pageable = PageRequest.of(numberPage,PAGE_SIZE,sort);
-        Pageable pageable = PageRequest.of(numberPage,PAGE_SIZE);
+        Sort sort = Sort.by("datePublish").descending(); // ordenation by recent date publish
+        Pageable pageable = PageRequest.of(numberPage,PAGE_SIZE,sort);
         return repository.findAll(pageable);
     }
     

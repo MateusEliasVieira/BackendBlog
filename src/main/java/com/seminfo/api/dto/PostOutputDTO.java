@@ -25,6 +25,6 @@ public class PostOutputDTO
     private String image;
 
     @NotNull
-    private UserOutputDTO userOutputDTO;
+    private UserOutputDTO user;
 
 }

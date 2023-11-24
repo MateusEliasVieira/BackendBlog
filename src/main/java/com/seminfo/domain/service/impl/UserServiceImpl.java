@@ -1,10 +1,7 @@
 package com.seminfo.domain.service.impl;
 
-import com.seminfo.api.dto.LoginInputDTO;
-import com.seminfo.api.dto.LoginOutputDTO;
+
 import com.seminfo.api.dto.NewPasswordInputDTO;
-import com.seminfo.api.dto.others.Message;
-import com.seminfo.api.mapper.LoginMapper;
 import com.seminfo.domain.enums.Permissions;
 import com.seminfo.domain.exception.UserNotFoundException;
 import com.seminfo.domain.model.User;
@@ -12,8 +9,6 @@ import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.UserService;
 import com.seminfo.security.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
