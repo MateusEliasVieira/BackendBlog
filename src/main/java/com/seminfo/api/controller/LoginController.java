@@ -12,13 +12,12 @@ import com.seminfo.utils.FormatDate;
 import com.seminfo.utils.Log;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -30,6 +29,9 @@ public class LoginController
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    public AuthenticationManager authenticationManager;
     private final int MAX_ATTEMPTS = 3;
 
     @PostMapping("/enter")
@@ -87,20 +89,30 @@ public class LoginController
 
     private ResponseEntity<?> processLogin(LoginInputDTO loginInputDTO)
     {
-        // username exists and is still within the maximum allowed number of attempts
-        User user = LoginMapper.mapperLoginInputDTOToUser(loginInputDTO);
-        User loggedInUser = service.login(user);
+        try{
 
-        // check login
-        if(loggedInUser != null && loggedInUser.isStatus())
-        {
-            // User and password exist, and status is true
-            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(), loggedInUser.getToken(), loggedInUser.getRole());
-            return new ResponseEntity<LoginOutputDTO>(loginOutputDTO, HttpStatus.ACCEPTED);
+            var usernamePassword = new UsernamePasswordAuthenticationToken(loginInputDTO.getUsername(),loginInputDTO.getPassword());
+            var auth = authenticationManager.authenticate(usernamePassword);
+
+            // check login
+            if(auth.isAuthenticated())
+            {
+                // register login
+                User loggedInUser = service.login(loginInputDTO.getUsername());
+
+                if(loggedInUser.isStatus())
+                {
+                    // User active
+                    LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(), loggedInUser.getToken(), loggedInUser.getRole());
+                    return new ResponseEntity<LoginOutputDTO>(loginOutputDTO, HttpStatus.ACCEPTED);
+                }
+
+            }
+        }catch (AuthenticationException e){
+            // increment attempts
+            service.updateAttempts(loginInputDTO.getUsername());
         }
 
-        // increment attempts
-        service.updateAttempts(loginInputDTO.getUsername());
         return new ResponseEntity<Message>(new Message(Feedback.INVALID_LOGIN), HttpStatus.NOT_ACCEPTABLE);
     }
 
@@ -123,6 +135,8 @@ public class LoginController
         }
         return new ResponseEntity<LoginOutputDTO>((LoginOutputDTO) null,HttpStatus.NO_CONTENT);
     }
+
+
 
 
 }

@@ -13,7 +13,7 @@ public interface UserService {
     public User save(User user);
     public User saveUserAfterConfirmedAccountByEmail(String token);
     public List<User> fetchAll();
-    public User login(User user);
+    public User login(String username);
     public User loginWithGoogle(User user);
     public User findUser(Long idUser);
     public Boolean findUser(String username);

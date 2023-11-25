@@ -76,20 +76,13 @@ public class UserServiceImpl implements UserService
 
     @Transactional(readOnly = false)
     @Override
-    public User login(User user)
+    public User login(String username)
     {
-        User userLogin = repository.findUserByUsername(user.getUsername());
-        if(userLogin != null && passwordEncoder.matches(user.getPassword(), userLogin.getPassword()))
-        {
-            userLogin.setToken(JwtToken.getToken(userLogin));
-            userLogin.setAttempts(0);
-            userLogin.setReleaseLogin(null);
-            return repository.save(userLogin);
-        }
-        else
-        {
-            return null;
-        }
+        User userLogin = repository.findUserByUsername(username);
+        userLogin.setToken(JwtToken.getToken(userLogin));
+        userLogin.setAttempts(0);
+        userLogin.setReleaseLogin(null);
+        return repository.save(userLogin);
     }
 
     @Transactional(readOnly = false)
