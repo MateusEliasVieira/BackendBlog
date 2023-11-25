@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -44,11 +43,9 @@ public class WebFilterConfiguration {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.cors();// cross origin resource sharing = compartilhamento de recursos de origens
-					// cruzadas
+		http.cors(); // cross origin resource sharing (compartilhamento de recursos de origens cruzadas)
 
-		http.csrf(AbstractHttpConfigurer::disable); // Habilita a segurança contra ataques csrf (Cross-site request
-													// forgery)
+		http.csrf(AbstractHttpConfigurer::disable); // Habilita a segurança contra ataques csrf (Cross-site request forgery)
 
 		http.formLogin(AbstractHttpConfigurer::disable)
 				.httpBasic(AbstractHttpConfigurer::disable)
@@ -60,7 +57,7 @@ public class WebFilterConfiguration {
 						.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
 						.anyRequest().authenticated());
 
-		http.addFilterBefore(new FiltroInterceptador(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(new InterceptorFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		return http.build();

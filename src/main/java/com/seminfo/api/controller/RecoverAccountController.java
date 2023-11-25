@@ -1,10 +1,12 @@
 package com.seminfo.api.controller;
 
 import com.seminfo.api.dto.NewPasswordInputDTO;
+import com.seminfo.api.mapper.UserMapper;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
 import com.seminfo.utils.Feedback;
+import com.seminfo.utils.StrongPassword;
 import jakarta.mail.MessagingException;
 import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +44,28 @@ public class RecoverAccountController {
     }
 
     @PostMapping("/new-password")
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO){
-        User user = userService.updatePassword(newPasswordInputDTO);
-        if(user != null){
-            return new ResponseEntity<String>(Feedback.OK_PASSWORD_CHANGE, HttpStatus.OK);
-        }else{
-            return new ResponseEntity<String>(Feedback.ERROR_PASSWORD_CHANGE, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<String> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO)
+    {
+        if(StrongPassword.isStrong(newPasswordInputDTO.getNewpassword()))
+        {
+            // password is strong
+            User user = userService.updatePassword(newPasswordInputDTO);
+
+            if(user != null)
+            {
+                return new ResponseEntity<String>(Feedback.OK_PASSWORD_CHANGE, HttpStatus.OK);
+            }
+            else
+            {
+                return new ResponseEntity<String>(Feedback.ERROR_PASSWORD_CHANGE, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
+        else
+        {
+            // password not strong
+            return new ResponseEntity<String>(Feedback.WEAK_PASSWORD, HttpStatus.NOT_ACCEPTABLE);
+        }
+
     }
 
 

@@ -1,10 +1,12 @@
 package com.seminfo.domain.model;
 
-import com.seminfo.domain.enums.Permissions;
+import com.seminfo.domain.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 @Getter
@@ -12,7 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class User
+@EntityListeners(AuditingEntityListener.class)
+public class User implements Serializable
 {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +49,7 @@ public class User
     private List<Post> posts;
 
     @Enumerated(EnumType.STRING)
-    private Permissions permission;
+    private Roles role;
 
     @NotNull
     private int attempts;

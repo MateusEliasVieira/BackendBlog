@@ -2,6 +2,7 @@ package com.seminfo.domain.service;
 
 import com.seminfo.api.dto.LoginInputDTO;
 import com.seminfo.api.dto.NewPasswordInputDTO;
+import com.seminfo.domain.enums.Roles;
 import com.seminfo.domain.model.User;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +17,7 @@ public interface UserService {
     public User loginWithGoogle(User user);
     public User findUser(Long idUser);
     public Boolean findUser(String username);
+    public User findUserByUsername(String username);
     public int updateAttempts(String username);
     public int attemptsUser(String username);
     public Date releaseLogin(String username);
@@ -23,5 +25,6 @@ public interface UserService {
     public Date getDateReleaseLogin(String username);
     public void resetAttemptsAndReleaseLogin(String username);
     public User updatePassword(NewPasswordInputDTO newPasswordInputDTO);
+    public Roles findRoleByUsername(String username);
     public boolean confirmAccount(String tokenUrl);
 }

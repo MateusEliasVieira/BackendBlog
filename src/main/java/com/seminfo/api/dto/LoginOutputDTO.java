@@ -1,6 +1,6 @@
 package com.seminfo.api.dto;
 
-import com.seminfo.domain.enums.Permissions;
+import com.seminfo.domain.enums.Roles;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,6 +17,6 @@ public class LoginOutputDTO
     @NotBlank
     private String token;
     @NotNull
-    private Permissions permission;
+    private Roles permission;
 
 }

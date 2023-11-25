@@ -2,6 +2,7 @@ package com.seminfo.security;
 
 import java.io.IOException;
 
+import com.seminfo.security.jwt.JwtToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -11,7 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class FiltroInterceptador extends OncePerRequestFilter
+public class InterceptorFilter extends OncePerRequestFilter
 {
 
 	@Override
@@ -21,7 +22,7 @@ public class FiltroInterceptador extends OncePerRequestFilter
 		Authentication authentication = null;
 		try
 		{
-			authentication = TokenUtil.getAuthentication(request);
+			authentication = JwtToken.getAuthentication(request);
 		}
 		catch (Exception e)
 		{

@@ -2,12 +2,12 @@ package com.seminfo.domain.service.impl;
 
 
 import com.seminfo.api.dto.NewPasswordInputDTO;
-import com.seminfo.domain.enums.Permissions;
+import com.seminfo.domain.enums.Roles;
 import com.seminfo.domain.exception.UserNotFoundException;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.UserService;
-import com.seminfo.security.TokenUtil;
+import com.seminfo.security.jwt.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,10 +38,10 @@ public class UserServiceImpl implements UserService
         if(repository.findUserByEmail(user.getEmail())==null && repository.findUserByUsername(user.getUsername())==null)
         {
             // empty user
-            String firstTokenUser = TokenUtil.getToken(user);
+            String firstTokenUser = JwtToken.getToken(user);
             user.setToken(firstTokenUser);
             user.setStatus(false);
-            user.setPermission(Permissions.USER);
+            user.setRole(Roles.ROLE_USER);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return repository.save(user);
         }
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService
         User userLogin = repository.findUserByUsername(user.getUsername());
         if(userLogin != null && passwordEncoder.matches(user.getPassword(), userLogin.getPassword()))
         {
-            userLogin.setToken(TokenUtil.getToken(userLogin));
+            userLogin.setToken(JwtToken.getToken(userLogin));
             userLogin.setAttempts(0);
             userLogin.setReleaseLogin(null);
             return repository.save(userLogin);
@@ -100,16 +100,16 @@ public class UserServiceImpl implements UserService
         if(userLoginWithGoogle==null)
         {
             // empty user
-            String firstTokenUser = TokenUtil.getToken(user);
+            String firstTokenUser = JwtToken.getToken(user);
             user.setToken(firstTokenUser);
             user.setStatus(true);
-            user.setPermission(Permissions.USER);
+            user.setRole(Roles.ROLE_USER);
             return repository.save(user);
         }
         else if(passwordEncoder.matches(user.getPassword(),userLoginWithGoogle.getPassword()))
         {
             // exist user. Update Token
-            userLoginWithGoogle.setToken(TokenUtil.getToken(userLoginWithGoogle));
+            userLoginWithGoogle.setToken(JwtToken.getToken(userLoginWithGoogle));
             return repository.save(userLoginWithGoogle);
         }
 
@@ -200,5 +200,14 @@ public class UserServiceImpl implements UserService
         return repository.save(user);
     }
 
+    @Override
+    public Roles findRoleByUsername(String username) {
+        return repository.findRoleByUsername(username);
+    }
 
+    @Transactional(readOnly = false)
+    @Override
+    public User findUserByUsername(String username) {
+        return repository.findUserByUsername(username);
+    }
 }

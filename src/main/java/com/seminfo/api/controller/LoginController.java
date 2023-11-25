@@ -95,7 +95,7 @@ public class LoginController
         if(loggedInUser != null && loggedInUser.isStatus())
         {
             // User and password exist, and status is true
-            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(), loggedInUser.getToken(), loggedInUser.getPermission());
+            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(), loggedInUser.getToken(), loggedInUser.getRole());
             return new ResponseEntity<LoginOutputDTO>(loginOutputDTO, HttpStatus.ACCEPTED);
         }
 
@@ -117,7 +117,7 @@ public class LoginController
         {
             // Exist email and password // status is true
 
-            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(),loggedInUser.getToken(),loggedInUser.getPermission());
+            LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(),loggedInUser.getToken(),loggedInUser.getRole());
 
             return new ResponseEntity<LoginOutputDTO>(loginOutputDTO,HttpStatus.ACCEPTED);
         }

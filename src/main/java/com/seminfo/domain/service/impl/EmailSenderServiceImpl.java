@@ -3,14 +3,12 @@ package com.seminfo.domain.service.impl;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.EmailSenderService;
-import com.seminfo.domain.service.UserService;
-import com.seminfo.security.TokenUtil;
+import com.seminfo.security.jwt.JwtToken;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -71,7 +69,7 @@ public class EmailSenderServiceImpl implements EmailSenderService
             helper.setTo(to);
             helper.setSubject("Recover Account");
 
-            String newToken = TokenUtil.getToken(user); // gerar novo token
+            String newToken = JwtToken.getToken(user); // gerar novo token
             user.setToken(newToken); // atualizar token do usuario
             User userUpdateWithNewToken = repository.save(user); // salvar mudanças
             String token = userUpdateWithNewToken.getToken(); // obter o token atualizado

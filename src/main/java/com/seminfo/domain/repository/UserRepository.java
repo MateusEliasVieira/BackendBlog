@@ -1,5 +1,6 @@
 package com.seminfo.domain.repository;
 
+import com.seminfo.domain.enums.Roles;
 import com.seminfo.domain.model.User;
 import org.hibernate.annotations.SQLUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,6 +35,9 @@ public interface UserRepository extends JpaRepository<User,Long>
 
     @Query("SELECT u.attempts FROM User u WHERE u.username = :username")
     public int attemptsUser(@Param("username") String username);
+
+    @Query("SELECT u.role FROM User u WHERE u.username = :username")
+    public Roles findRoleByUsername(@Param("username") String username);
 
     @Modifying
     @Query("UPDATE User u SET u.releaseLogin = :releaseDate WHERE u.username = :username")
