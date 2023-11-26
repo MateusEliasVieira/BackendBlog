@@ -12,10 +12,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaginationPost
-{
+public class PaginationPost {
     private List<PostOutputDTO> listPostsOutput;
     private int qtdPages;
     private Long qtdPosts;
-    
+
 }

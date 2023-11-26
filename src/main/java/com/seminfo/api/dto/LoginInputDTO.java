@@ -10,8 +10,7 @@ import org.aspectj.bridge.IMessage;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginInputDTO
-{
+public class LoginInputDTO {
 
     @NotBlank(message = Field.USERNAME_MESSAGE)
     private String username;

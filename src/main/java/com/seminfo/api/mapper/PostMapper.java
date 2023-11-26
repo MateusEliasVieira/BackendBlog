@@ -9,27 +9,23 @@ import org.modelmapper.ModelMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PostMapper
-{
+public class PostMapper {
 
-    public static Post mapperPostInputDTOToPost(PostInputDTO postInputDTO)
-    {
+    public static Post mapperPostInputDTOToPost(PostInputDTO postInputDTO) {
         ModelMapper mapper = new ModelMapper();
-        return mapper.map(postInputDTO,Post.class);
+        return mapper.map(postInputDTO, Post.class);
     }
 
-    public static PostOutputDTO mapperPostToPostOutputDTO(Post post)
-    {
+    public static PostOutputDTO mapperPostToPostOutputDTO(Post post) {
         ModelMapper mapper = new ModelMapper();
         return mapper.map(post, PostOutputDTO.class);
     }
 
-    public static List<PostOutputDTO> mapperListPostToListPostOutputDTO(List<Post> listPost)
-    {
+    public static List<PostOutputDTO> mapperListPostToListPostOutputDTO(List<Post> listPost) {
         ModelMapper mapper = new ModelMapper();
         return listPost
                 .stream()
-                .map(post -> mapper.map(post,PostOutputDTO.class))
+                .map(post -> mapper.map(post, PostOutputDTO.class))
                 .collect(Collectors.toList());
     }
 

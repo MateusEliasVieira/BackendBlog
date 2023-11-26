@@ -10,8 +10,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserOutputDTO
-{
+public class UserOutputDTO {
 
     @NotNull
     private Long idUser;

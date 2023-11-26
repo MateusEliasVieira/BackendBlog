@@ -9,14 +9,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginOutputDTO
-{
+public class LoginOutputDTO {
 
     @NotNull
     private Long idUser;
     @NotBlank
     private String token;
     @NotNull
-    private Roles permission;
+    private Roles role;
 
 }

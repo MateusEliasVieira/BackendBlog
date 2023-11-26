@@ -10,8 +10,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginInputGoogleDTO
-{
+public class LoginInputGoogleDTO {
 
     @NotBlank(message = Field.NAME_MESSAGE)
     @Size(min = 4, message = Field.NAME_SIZE_MESSAGE)

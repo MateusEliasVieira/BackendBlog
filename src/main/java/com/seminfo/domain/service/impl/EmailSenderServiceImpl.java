@@ -16,8 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 
 @Service
-public class EmailSenderServiceImpl implements EmailSenderService
-{
+public class EmailSenderServiceImpl implements EmailSenderService {
 
     @Value("${spring.mail.username}")
     private String MY_GMAIL;
@@ -29,8 +28,7 @@ public class EmailSenderServiceImpl implements EmailSenderService
     private UserRepository repository;
 
     @Override
-    public void sendEmail(String to,String token) throws MailException, MessagingException
-    {
+    public void sendEmail(String to, String token) throws MailException, MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
 
@@ -46,7 +44,7 @@ public class EmailSenderServiceImpl implements EmailSenderService
 
         // Use HTML para criar um link estilizado
         String htmlContent = "<p>Please click the link below to validate your email and create your account</p>" +
-                             "<p><a href=\"http://localhost:5173/confirmation?token=" + tokenBase64String + "\" style=\"color: #007BFF; text-decoration: none;\">Confirmar!</a></p>";
+                "<p><a href=\"http://localhost:5173/confirmation?token=" + tokenBase64String + "\" style=\"color: #007BFF; text-decoration: none;\">Confirmar!</a></p>";
         helper.setText(htmlContent, true);
 
         javaMailSender.send(mimeMessage);
@@ -54,12 +52,10 @@ public class EmailSenderServiceImpl implements EmailSenderService
     }
 
     @Override
-    public boolean recoverAccount(String to) throws MailException, MessagingException
-    {
-        User user  = repository.findUserByEmail(to);
+    public boolean recoverAccount(String to) throws MailException, MessagingException {
+        User user = repository.findUserByEmail(to);
 
-        if(user != null)
-        {
+        if (user != null) {
             // exist user
 
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -69,7 +65,7 @@ public class EmailSenderServiceImpl implements EmailSenderService
             helper.setTo(to);
             helper.setSubject("Recover Account");
 
-            String newToken = JwtToken.getToken(user); // gerar novo token
+            String newToken = JwtToken.generateTokenJWT(user); // gerar novo token
             user.setToken(newToken); // atualizar token do usuario
             User userUpdateWithNewToken = repository.save(user); // salvar mudanças
             String token = userUpdateWithNewToken.getToken(); // obter o token atualizado
@@ -82,9 +78,7 @@ public class EmailSenderServiceImpl implements EmailSenderService
             javaMailSender.send(mimeMessage);
 
             return true;
-        }
-        else
-        {
+        } else {
             // not exist user
             return false;
         }

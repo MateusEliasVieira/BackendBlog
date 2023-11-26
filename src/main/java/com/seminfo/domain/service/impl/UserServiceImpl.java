@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService
-{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository repository;
@@ -33,37 +32,29 @@ public class UserServiceImpl implements UserService
 
     @Transactional(readOnly = false)
     @Override
-    public User save(User user)
-    {
-        if(repository.findUserByEmail(user.getEmail())==null && repository.findUserByUsername(user.getUsername())==null)
-        {
+    public User save(User user) {
+        if (repository.findUserByEmail(user.getEmail()) == null && repository.findUserByUsername(user.getUsername()) == null) {
             // empty user
-            String firstTokenUser = JwtToken.getToken(user);
+            String firstTokenUser = JwtToken.generateTokenJWT(user);
             user.setToken(firstTokenUser);
             user.setStatus(false);
             user.setRole(Roles.ROLE_USER);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             return repository.save(user);
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
 
     @Transactional(readOnly = false)
     @Override
-    public User saveUserAfterConfirmedAccountByEmail(String token)
-    {
+    public User saveUserAfterConfirmedAccountByEmail(String token) {
         User user = repository.findUserByToken(token);
-        if(user != null)
-        {
+        if (user != null) {
             // token exist from email confirmation
             user.setStatus(true);
             return repository.save(user);
-        }
-        else
-        {
+        } else {
             return null;
         }
     }
@@ -76,33 +67,27 @@ public class UserServiceImpl implements UserService
 
     @Transactional(readOnly = false)
     @Override
-    public User login(String username)
-    {
-        User userLogin = repository.findUserByUsername(username);
-        userLogin.setToken(JwtToken.getToken(userLogin));
-        userLogin.setAttempts(0);
-        userLogin.setReleaseLogin(null);
-        return repository.save(userLogin);
+    public User login(User user) {
+        user.setToken(JwtToken.generateTokenJWT(user));
+        user.setAttempts(0);
+        user.setReleaseLogin(null);
+        return repository.save(user);
     }
 
     @Transactional(readOnly = false)
     @Override
-    public User loginWithGoogle(User user)
-    {
+    public User loginWithGoogle(User user) {
         User userLoginWithGoogle = repository.findAccountGoogleByEmail(user.getEmail());
-        if(userLoginWithGoogle==null)
-        {
+        if (userLoginWithGoogle == null) {
             // empty user
-            String firstTokenUser = JwtToken.getToken(user);
+            String firstTokenUser = JwtToken.generateTokenJWT(user);
             user.setToken(firstTokenUser);
             user.setStatus(true);
             user.setRole(Roles.ROLE_USER);
             return repository.save(user);
-        }
-        else if(passwordEncoder.matches(user.getPassword(),userLoginWithGoogle.getPassword()))
-        {
+        } else if (passwordEncoder.matches(user.getPassword(), userLoginWithGoogle.getPassword())) {
             // exist user. Update Token
-            userLoginWithGoogle.setToken(JwtToken.getToken(userLoginWithGoogle));
+            userLoginWithGoogle.setToken(JwtToken.generateTokenJWT(userLoginWithGoogle));
             return repository.save(userLoginWithGoogle);
         }
 
@@ -111,16 +96,14 @@ public class UserServiceImpl implements UserService
 
     @Transactional(readOnly = true)
     @Override
-    public User findUser(Long idUser)
-    {
-       Optional<User> userOptional = repository.findById(idUser);
-       return userOptional.isPresent() ? userOptional.get() : userOptional.orElseThrow(() -> new UserNotFoundException("User not found!"));
+    public User findUser(Long idUser) {
+        Optional<User> userOptional = repository.findById(idUser);
+        return userOptional.isPresent() ? userOptional.get() : userOptional.orElseThrow(() -> new UserNotFoundException("User not found!"));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Boolean findUser(String username)
-    {
+    public Boolean findUser(String username) {
         Optional<User> userOptional = Optional.ofNullable(repository.findUserByUsername(username));
         return userOptional.isPresent();
     }
@@ -129,7 +112,7 @@ public class UserServiceImpl implements UserService
     @Override
     public int updateAttempts(String username) {
         int attempts = repository.attemptsUser(username) + 1;
-        repository.updateAttemptsUser(attempts,username);
+        repository.updateAttemptsUser(attempts, username);
         return repository.attemptsUser(username);
     }
 
@@ -141,20 +124,20 @@ public class UserServiceImpl implements UserService
 
     @Transactional(readOnly = false)
     @Override
-    public Date releaseLogin(String username){
+    public Date releaseLogin(String username) {
         // get current date and time
         LocalDateTime now = LocalDateTime.now();
         // Add minutes
         LocalDateTime minutes = now.plusMinutes(MINUTES_TO_RETRY);
         // release date
         Date releaseDate = Date.from(minutes.toInstant(ZoneOffset.of("-03:00")));
-        repository.updateReleaseDate(releaseDate,username);
+        repository.updateReleaseDate(releaseDate, username);
         return releaseDate;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Date getDateReleaseLogin(String username){
+    public Date getDateReleaseLogin(String username) {
         return repository.getDateReleaseLogin(username);
     }
 
@@ -172,15 +155,11 @@ public class UserServiceImpl implements UserService
 
     @Transactional(readOnly = false)
     @Override
-    public boolean confirmAccount(String tokenUrl)
-    {
+    public boolean confirmAccount(String tokenUrl) {
         Integer qtdRows = repository.updateStatusUserByToken(tokenUrl);
-        if(qtdRows > 0)
-        {
+        if (qtdRows > 0) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }

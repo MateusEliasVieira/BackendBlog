@@ -2,6 +2,7 @@ package com.seminfo.api.mapper;
 
 import com.seminfo.api.dto.LoginInputDTO;
 import com.seminfo.api.dto.LoginInputGoogleDTO;
+import com.seminfo.api.dto.LoginOutputDTO;
 import com.seminfo.domain.model.User;
 import org.modelmapper.ModelMapper;
 
@@ -18,5 +19,10 @@ public class LoginMapper
     {
         ModelMapper mapper = new ModelMapper();
         return mapper.map(loginInputGoogleDTO, User.class);
+    }
+
+    public static LoginOutputDTO mapperUserToLoginOutputDTO(User user){
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(user,LoginOutputDTO.class);
     }
 }

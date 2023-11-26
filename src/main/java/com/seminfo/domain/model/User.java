@@ -14,16 +14,17 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails
-{
+public class User implements UserDetails {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
     @NotBlank
     @Size(min = 4)
@@ -62,22 +63,16 @@ public class User implements UserDetails
     private Date releaseLogin;
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities()
-    {
-        if(this.role == Roles.ROLE_ADMIN)
-        {
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == Roles.ROLE_ADMIN) {
             // se esse usuário tiver uma role de admin, retornamos os tipos de acesso que ele pode ter no sistema, nesse caso admin e user
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        if(this.role == Roles.ROLE_USER)
-        {
+        if (this.role == Roles.ROLE_USER) {
             // se esse usuário tiver uma role de user, retornamos o tipo de acesso que ele pode ter no sistema, nesse caso apenas user
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-
-        else
-        {
+        } else {
             return null;
         }
     }

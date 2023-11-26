@@ -23,45 +23,32 @@ public class RecoverAccountController {
 
     @Autowired
     private UserService userService;
+
     @GetMapping("/recover-account/{email}")
-    public ResponseEntity<String> recoverAccount(@PathVariable("email") @Email String email)
-    {
-        try
-        {
-            if(emailSenderService.recoverAccount(email))
-            {
+    public ResponseEntity<String> recoverAccount(@PathVariable("email") @Email String email) {
+        try {
+            if (emailSenderService.recoverAccount(email)) {
                 return new ResponseEntity<String>(Feedback.ACCOUNT_RECOVER_SENT, HttpStatus.OK);
-            }
-            else
-            {
+            } else {
                 return new ResponseEntity<String>(Feedback.EMPTY_USER, HttpStatus.NOT_ACCEPTABLE);
             }
-        }
-        catch (MessagingException e)
-        {
+        } catch (MessagingException e) {
             return new ResponseEntity<String>(Feedback.ERROR_ACCOUNT_RECOVER, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/new-password")
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO)
-    {
-        if(StrongPassword.isStrong(newPasswordInputDTO.getNewpassword()))
-        {
+    public ResponseEntity<String> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO) {
+        if (StrongPassword.isStrong(newPasswordInputDTO.getNewpassword())) {
             // password is strong
             User user = userService.updatePassword(newPasswordInputDTO);
 
-            if(user != null)
-            {
+            if (user != null) {
                 return new ResponseEntity<String>(Feedback.OK_PASSWORD_CHANGE, HttpStatus.OK);
-            }
-            else
-            {
+            } else {
                 return new ResponseEntity<String>(Feedback.ERROR_PASSWORD_CHANGE, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        }
-        else
-        {
+        } else {
             // password not strong
             return new ResponseEntity<String>(Feedback.WEAK_PASSWORD, HttpStatus.NOT_ACCEPTABLE);
         }

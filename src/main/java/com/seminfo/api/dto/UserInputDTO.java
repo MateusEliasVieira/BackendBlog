@@ -13,8 +13,7 @@ import static com.seminfo.utils.Field.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInputDTO
-{
+public class UserInputDTO {
 
     @NotBlank(message = Field.NAME_MESSAGE)
     @Size(min = 4, message = Field.NAME_SIZE_MESSAGE)

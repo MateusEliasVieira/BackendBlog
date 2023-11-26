@@ -14,13 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long>
-{
+public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.email = :email")
     public User findAccountGoogleByEmail(@Param("email") String email);
+
     @Modifying
     @Query("UPDATE User u SET u.status = true WHERE u.token = :token")
     public Integer updateStatusUserByToken(@Param("token") String token);
+
     @Query("SELECT u FROM User u WHERE u.email = :email")
     public User findUserByEmail(@Param("email") String email);
 
@@ -48,6 +49,7 @@ public interface UserRepository extends JpaRepository<User,Long>
 
     @Query("SELECT u.releaseLogin FROM User u WHERE u.username = :username")
     public Date getDateReleaseLogin(@Param("username") String username);
+
     @Modifying
     @Query("UPDATE User u SET u.releaseLogin = null, u.attempts = 0 WHERE u.username = :username")
     public void resetAttemptsAndReleaseLogin(@Param("username") String username);

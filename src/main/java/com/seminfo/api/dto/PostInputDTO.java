@@ -7,12 +7,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostInputDTO
-{
+public class PostInputDTO {
 
     @NotBlank(message = Field.TITLE_MESSAGE)
     private String title;

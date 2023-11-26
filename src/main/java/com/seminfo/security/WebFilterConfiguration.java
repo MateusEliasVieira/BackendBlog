@@ -1,5 +1,6 @@
 package com.seminfo.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,13 +23,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class WebFilterConfiguration {
 
-	/*
-	 * Um bean, no contexto do Spring Framework, é simplesmente um objeto gerenciado
-	 * pelo contêiner Spring.
-	 */
+	@Autowired
+	private InterceptorFilter interceptorFilter;
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
+
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.addAllowedOrigin("*"); // Permite todas as origens, você pode personalizar isso
 		configuration.addAllowedMethod("GET");
@@ -52,9 +52,11 @@ public class WebFilterConfiguration {
 
 		http.csrf(AbstractHttpConfigurer::disable); // Habilita a segurança contra ataques csrf (Cross-site request forgery)
 
-		http.formLogin(AbstractHttpConfigurer::disable);
+		http.formLogin(AbstractHttpConfigurer::disable); // Desabilita formulários de login html
 
 		http.httpBasic(AbstractHttpConfigurer::disable);
+
+		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Sem sessões
 
 		http.authorizeHttpRequests((auth) -> auth
 						.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
@@ -65,8 +67,7 @@ public class WebFilterConfiguration {
 						.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
 						.anyRequest().authenticated());
 
-		http.addFilterBefore(new InterceptorFilter(), UsernamePasswordAuthenticationFilter.class);
-		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		http.addFilterBefore(this.interceptorFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}

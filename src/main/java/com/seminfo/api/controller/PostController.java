@@ -19,26 +19,24 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
-public class PostController
-{
+public class PostController {
 
     @Autowired
     private PostService service;
 
     @GetMapping("/test-controller")
-    public ResponseEntity<Boolean> getTest(){
-        return new ResponseEntity<Boolean>(true,HttpStatus.ACCEPTED);
+    public ResponseEntity<Boolean> getTest() {
+        return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
     }
+
     @GetMapping("/all")
-    public ResponseEntity<List<PostOutputDTO>> getPosts()
-    {
+    public ResponseEntity<List<PostOutputDTO>> getPosts() {
         List<PostOutputDTO> list = PostMapper.mapperListPostToListPostOutputDTO(service.fetchAll());
         return new ResponseEntity<List<PostOutputDTO>>(list, HttpStatus.OK);
     }
 
     @GetMapping("/page/{page}")
-    public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage)
-    {
+    public ResponseEntity<PaginationPost> getPosts(@PathVariable("page") int numberPage) {
         Page<Post> pages = service.fetchAllWithPagination(numberPage);
         pages.toList().forEach(post -> System.out.println(post.getUser().getName()));
         List<PostOutputDTO> list = PostMapper.mapperListPostToListPostOutputDTO(pages.toList());
@@ -50,41 +48,33 @@ public class PostController
     }
 
     @PostMapping("/new")
-    public ResponseEntity<Message> newPost(@RequestBody @Valid PostInputDTO postInputDTO)
-    {
+    public ResponseEntity<Message> newPost(@RequestBody @Valid PostInputDTO postInputDTO) {
         Message message = new Message();
         HttpStatus status = null;
 
-        if(service.save( PostMapper.mapperPostInputDTOToPost(postInputDTO) ) != null)
-        {
+        if (service.save(PostMapper.mapperPostInputDTOToPost(postInputDTO)) != null) {
             message.setMessage(Feedback.POST_COMPLETED);
             status = HttpStatus.CREATED;
-        }
-        else
-        {
+        } else {
             message.setMessage(Feedback.ERROR_POST);
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<Message>(message,status);
+        return new ResponseEntity<Message>(message, status);
     }
 
     @GetMapping("/read-post/{idPost}")
     @ResponseBody
-    public ResponseEntity<PostOutputDTO> readPost(@PathVariable Long idPost)
-    {
+    public ResponseEntity<PostOutputDTO> readPost(@PathVariable Long idPost) {
         HttpStatus status = null;
         Post post = service.findPostById(idPost);
         PostOutputDTO postOutputDTO = null;
-        if(post != null)
-        {
+        if (post != null) {
             status = HttpStatus.OK;
             postOutputDTO = PostMapper.mapperPostToPostOutputDTO(post);
-        }
-        else
-        {
+        } else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        return new ResponseEntity<PostOutputDTO>(postOutputDTO,status);
+        return new ResponseEntity<PostOutputDTO>(postOutputDTO, status);
     }
 
 }

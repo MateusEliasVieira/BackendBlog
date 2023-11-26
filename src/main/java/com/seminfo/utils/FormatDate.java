@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class FormatDate {
 
-    public static final String formatMyDate(Date date){
+    public static final String formatMyDate(Date date) {
         // Criar um formato desejado
         SimpleDateFormat myFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         // Formatar a data em uma string

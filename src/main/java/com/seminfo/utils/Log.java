@@ -14,46 +14,37 @@ import java.util.Date;
 
 public class Log {
 
-    public static void createSimpleLog(LoginInputDTO loginInputDTO, HttpServletRequest request)
-    {
-        try
-        {
-            String dataRequest = getDataRequest(loginInputDTO,request);
+    public static void createSimpleLog(LoginInputDTO loginInputDTO, HttpServletRequest request) {
+        try {
+            String dataRequest = getDataRequest(loginInputDTO, request);
 
             File file = new File("log.txt");
-            FileWriter fileWriter = new FileWriter(file,true);
+            FileWriter fileWriter = new FileWriter(file, true);
 
             fileWriter.append(dataRequest);
             fileWriter.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    public static void createGoogleLog(LoginInputGoogleDTO loginInputGoogleDTO, HttpServletRequest request)
-    {
-        try
-        {
-            String dataRequest = getDataRequest(loginInputGoogleDTO,request);
+    public static void createGoogleLog(LoginInputGoogleDTO loginInputGoogleDTO, HttpServletRequest request) {
+        try {
+            String dataRequest = getDataRequest(loginInputGoogleDTO, request);
 
             File file = new File("log.txt");
-            FileWriter fileWriter = new FileWriter(file,true);
+            FileWriter fileWriter = new FileWriter(file, true);
 
             fileWriter.append(dataRequest);
             fileWriter.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
 
     }
 
-    private static String getDataRequest(LoginInputDTO loginInputDTO,HttpServletRequest request)
-    {
+    private static String getDataRequest(LoginInputDTO loginInputDTO, HttpServletRequest request) {
         Date date = new Date();
 
         // Obtém o User-Agent do cabeçalho da requisição
@@ -74,22 +65,18 @@ public class Log {
 
         String xForwardedForHeader = request.getHeader("X-Forwarded-For");
         String ipClient = "";
-        if (xForwardedForHeader == null)
-        {
+        if (xForwardedForHeader == null) {
             ipClient = request.getRemoteAddr();
-        }
-        else
-        {
+        } else {
             // O cabeçalho X-Forwarded-For pode conter uma lista de endereços IP, onde o primeiro endereço é o endereço do cliente.
             ipClient = xForwardedForHeader.split(",")[0].trim();
         }
 
-        return "Date: "+date.getTime()+", IP: "+ipClient+", Browser: "+browserClient+", SO: "+so+" -> Login = [username: "+loginInputDTO.getUsername()+", password: "+loginInputDTO.getPassword()+"]\n";
+        return "Date: " + date.getTime() + ", IP: " + ipClient + ", Browser: " + browserClient + ", SO: " + so + " -> Login = [username: " + loginInputDTO.getUsername() + ", password: " + loginInputDTO.getPassword() + "]\n";
 
     }
 
-    private static String getDataRequest(LoginInputGoogleDTO loginInputGoogleDTO,HttpServletRequest request)
-    {
+    private static String getDataRequest(LoginInputGoogleDTO loginInputGoogleDTO, HttpServletRequest request) {
         Date date = new Date();
 
         // Obtém o User-Agent do cabeçalho da requisição
@@ -110,17 +97,14 @@ public class Log {
 
         String xForwardedForHeader = request.getHeader("X-Forwarded-For");
         String ipClient = "";
-        if (xForwardedForHeader == null)
-        {
+        if (xForwardedForHeader == null) {
             ipClient = request.getRemoteAddr();
-        }
-        else
-        {
+        } else {
             // O cabeçalho X-Forwarded-For pode conter uma lista de endereços IP, onde o primeiro endereço é o endereço do cliente.
             ipClient = xForwardedForHeader.split(",")[0].trim();
         }
 
-        return "Date: "+date.getTime()+", IP: "+ipClient+", Browser: "+browserClient+", SO: "+so+" -> LoginGoogle = [name: "+loginInputGoogleDTO.getName()+", email: "+loginInputGoogleDTO.getEmail()+", username: "+loginInputGoogleDTO.getUsername()+", password: "+loginInputGoogleDTO.getPassword()+"]\n";
+        return "Date: " + date.getTime() + ", IP: " + ipClient + ", Browser: " + browserClient + ", SO: " + so + " -> LoginGoogle = [name: " + loginInputGoogleDTO.getName() + ", email: " + loginInputGoogleDTO.getEmail() + ", username: " + loginInputGoogleDTO.getUsername() + ", password: " + loginInputGoogleDTO.getPassword() + "]\n";
 
     }
 

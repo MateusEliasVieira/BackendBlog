@@ -13,28 +13,23 @@ import java.util.Base64;
 
 @RestController
 @RequestMapping("/email")
-public class EmailController
-{
+public class EmailController {
 
     @Autowired
     private UserService service;
 
     @GetMapping("/confirmation/{token}")
-    public ResponseEntity<Message> confirmMyCountByReceiveEmail(@PathVariable("token") String token)
-    {
+    public ResponseEntity<Message> confirmMyCountByReceiveEmail(@PathVariable("token") String token) {
         Message message = new Message();
         // Decode the string Base64
         byte[] decodedBytes = Base64.getDecoder().decode(token);
         String tokenDecodedString = new String(decodedBytes);
         User userConfirmed = service.saveUserAfterConfirmedAccountByEmail(tokenDecodedString);
-        if(userConfirmed != null)
-        {
+        if (userConfirmed != null) {
             // saved
             message.setMessage(Feedback.ACCOUNT_CONFIRMED);
             return new ResponseEntity<Message>(message, HttpStatus.OK);
-        }
-        else
-        {
+        } else {
             message.setMessage(Feedback.ERROR_ACCOUNT_CONFIRMED);
             return new ResponseEntity<Message>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }

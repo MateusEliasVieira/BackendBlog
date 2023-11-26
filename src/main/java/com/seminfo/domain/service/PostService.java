@@ -9,7 +9,10 @@ import java.util.Optional;
 
 public interface PostService {
     public Post save(Post post);
+
     public List<Post> fetchAll();
+
     public Post findPostById(Long idPost);
+
     public Page<Post> fetchAllWithPagination(int numberPage);
 }
