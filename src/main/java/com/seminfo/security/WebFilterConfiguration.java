@@ -1,5 +1,6 @@
 package com.seminfo.security;
 
+import com.seminfo.domain.enums.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,11 +32,13 @@ public class WebFilterConfiguration {
 
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.addAllowedOrigin("*"); // Permite todas as origens, você pode personalizar isso
+		// Methods http authorized
 		configuration.addAllowedMethod("GET");
 		configuration.addAllowedMethod("POST");
 		configuration.addAllowedMethod("PUT");
 		configuration.addAllowedMethod("DELETE");
 		configuration.addAllowedMethod("OPTIONS");
+		// Headers http authorized
 		configuration.addAllowedHeader("Authorization");
 		configuration.addAllowedHeader("Content-Type");
 
@@ -48,7 +51,7 @@ public class WebFilterConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
 	{
-		http.cors(AbstractHttpConfigurer::disable); // cross origin resource sharing (compartilhamento de recursos de origens cruzadas)
+		http.cors(); // cross origin resource sharing (compartilhamento de recursos de origens cruzadas)
 
 		http.csrf(AbstractHttpConfigurer::disable); // Habilita a segurança contra ataques csrf (Cross-site request forgery)
 
@@ -59,13 +62,22 @@ public class WebFilterConfiguration {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // Sem sessões
 
 		http.authorizeHttpRequests((auth) -> auth
-						.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
-						.requestMatchers(HttpMethod.GET, "/recover/recover-account/*").permitAll()
-						.requestMatchers(HttpMethod.POST, "/login/enter").permitAll()
-						.requestMatchers(HttpMethod.POST, "/login/login-teste").permitAll()
-						.requestMatchers(HttpMethod.POST, "/login/google").permitAll()
-						.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
-						.anyRequest().authenticated());
+				// Login Controller
+				.requestMatchers(HttpMethod.POST, "/login/*").permitAll()
+				// Email Controller
+				.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
+				// Recover Account Controller
+				.requestMatchers(HttpMethod.GET, "/recover/recover-account/*").permitAll()
+				.requestMatchers(HttpMethod.POST, "/recover/new-password").hasAuthority(Roles.ROLE_USER.name())
+				// User Controller
+				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
+				.requestMatchers(HttpMethod.GET, "/user/find/*").hasAuthority(Roles.ROLE_USER.name())
+				// Post Controller
+				.requestMatchers(HttpMethod.POST, "/posts/new").hasAuthority(Roles.ROLE_ADMIN.name()) // Apenas usuários administradores podem postar
+				.requestMatchers(HttpMethod.GET, "/posts/all").hasAuthority(Roles.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/posts/page/*").hasAuthority(Roles.ROLE_USER.name())
+				.requestMatchers(HttpMethod.GET, "/posts/read-post/*").hasAuthority(Roles.ROLE_USER.name())
+				.anyRequest().authenticated());
 
 		http.addFilterBefore(this.interceptorFilter, UsernamePasswordAuthenticationFilter.class);
 

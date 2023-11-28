@@ -1,5 +1,6 @@
 package com.seminfo.api.dto;
 
+import com.seminfo.domain.enums.Roles;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -22,5 +23,7 @@ public class UserOutputDTO {
     private String about;
     @NotBlank
     private String image;
+    @NotNull
+    private Roles role;
 
 }

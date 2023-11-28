@@ -31,13 +31,10 @@ public class UserController {
     private EmailSenderService emailSenderService;
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto, Errors errors) {
+    public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto) {
         Message message = new Message();
         HttpStatus httpStatus = null;
         try {
-            if (errors.hasErrors()) {
-                System.out.println(errors.getAllErrors());
-            }
 
             if (StrongPassword.isStrong(userInputDto.getPassword())) {
                 // password is strong
