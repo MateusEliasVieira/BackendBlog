@@ -3,29 +3,29 @@ package com.seminfo.utils;
 public class Feedback {
 
     // Login
-    public static final String INVALID_LOGIN = "Invalid login!";
-    public static final String NEW_ATTEMPT = "Make a new attempt at ";
-    public static final String EXHAUSTED_ATTEMPTS = "Number of attempts exhausted, make a new attempt at '";
+    public static final String INVALID_LOGIN = "Login inválido!";
+    public static final String NEW_ATTEMPT = "Faça uma nova tentativa em ";
+    public static final String EXHAUSTED_ATTEMPTS = "Número de tentativas esgotado, faça uma nova tentativa em '";
 
     // Email
-    public static final String ACCOUNT_CONFIRMED = "Account confirmed successfully!";
-    public static final String ERROR_ACCOUNT_CONFIRMED = "Error when confirming account!";
+    public static final String ACCOUNT_CONFIRMED = "Conta confirmada com sucesso!";
+    public static final String ERROR_ACCOUNT_CONFIRMED = "Erro ao confirmar a conta!";
 
     // Post
-    public static final String POST_COMPLETED = "Post completed successfully!";
-    public static final String ERROR_POST = "Error while posting!";
+    public static final String POST_COMPLETED = "Postagem concluída com sucesso!";
+    public static final String ERROR_POST = "Erro ao postar!";
 
     // Recover
-    public static final String ACCOUNT_RECOVER_SENT = "Account recovery email sent successfully!";
-    public static final String EMPTY_USER = "There is no registered user with this email!";
-    public static final String ERROR_ACCOUNT_RECOVER = "Account recovery email could not be sent!";
-    public static final String OK_PASSWORD_CHANGE = "Password changed successfully!";
-    public static final String ERROR_PASSWORD_CHANGE = "Error when changing password!";
+    public static final String ACCOUNT_RECOVER_SENT = "E-mail de recuperação de conta enviado com sucesso!";
+    public static final String EMPTY_USER = "Não há usuário registrado com este e-mail!";
+    public static final String ERROR_ACCOUNT_RECOVER = "Não foi possível enviar o e-mail de recuperação de conta!";
+    public static final String OK_PASSWORD_CHANGE = "Senha alterada com sucesso!";
+    public static final String ERROR_PASSWORD_CHANGE = "Erro ao alterar a senha!";
 
     // User
-    public static final String USER_EXIST = "Ops! There is already a user with this email/username registered!";
-    public static final String WEAK_PASSWORD = "Ops! Your password is not strong! Use letters, numbers and special characters!";
-    public static final String ERROR_SEND_CONF_EMAIL = "Error sending confirmation email to ";
-    public static final String SEND_CONF_EMAIL = "Confirmation email successfully sent to ";
+    public static final String USER_EXIST = "Ops! Já existe um usuário registrado com este e-mail/nome de usuário!";
+    public static final String WEAK_PASSWORD = "Ops! Sua senha não é forte! Use letras, números e caracteres especiais!";
+    public static final String ERROR_SEND_CONF_EMAIL = "Erro ao enviar e-mail de confirmação para ";
+    public static final String SEND_CONF_EMAIL = "E-mail de confirmação enviado com sucesso para ";
 
 }

@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private Long idUser;
     @NotBlank
     @Size(min = 4)
-    //@Pattern(regexp = "^[A-Z]+(.)*") // garante que a primeira letra seja maiuscula
+    @Pattern(regexp = "^[A-Z]+(.)*") // garante que a primeira letra seja maiuscula
     private String name;
     @NotBlank
     @Column(unique = true)

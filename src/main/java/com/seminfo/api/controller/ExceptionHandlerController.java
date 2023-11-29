@@ -33,8 +33,8 @@ public class ExceptionHandlerController {
         ex.getBindingResult().getFieldErrors().forEach(error -> {
 
             ExceptionApi exceptionApi = new ExceptionApi();
-            exceptionApi.setMensagem(error.getDefaultMessage());
-            exceptionApi.setData(Date.from(Instant.now().atZone(ZoneId.of("America/Sao_Paulo")).toInstant()));
+            exceptionApi.setMessage(error.getDefaultMessage());
+            exceptionApi.setDate(Date.from(Instant.now().atZone(ZoneId.of("America/Sao_Paulo")).toInstant()));
 
             list.add(exceptionApi);
 

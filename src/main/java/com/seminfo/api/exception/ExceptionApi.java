@@ -8,6 +8,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class ExceptionApi {
-    private String mensagem;
-    private Date data;
+    private String message;
+    private Date date;
 }
