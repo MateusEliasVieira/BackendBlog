@@ -7,7 +7,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.seminfo.domain.service.UserService;
 import com.seminfo.security.jwt.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -38,13 +37,13 @@ public class InterceptorFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
                 // toke inválido
-                response.setStatus(401);
+                response.setStatus(400);
                 response.setContentType("application/json");
             }
 
         } catch (Exception e) {
             // toke inválido
-            response.setStatus(401);
+            response.setStatus(400);
             response.setContentType("application/json");
         }
 

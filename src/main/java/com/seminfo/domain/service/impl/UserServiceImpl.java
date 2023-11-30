@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = false)
     @Override
-    public void save(User user) {
+    public User save(User user) {
         if (repository.findUserByEmail(user.getEmail()) == null && repository.findUserByUsername(user.getUsername()) == null) {
             // empty user
             String firstTokenUser = JwtToken.generateTokenJWT(user);
@@ -44,6 +44,8 @@ public class UserServiceImpl implements UserService {
             User userSaved = repository.save(user);
             if(userSaved.getIdUser() == null){
                 throw new BusinessRulesException(Feedback.ERROR_CREATE_USER + user.getName());
+            }else{
+                return userSaved;
             }
         } else {
             throw new BusinessRulesException(Feedback.USER_EXIST);
@@ -57,12 +59,6 @@ public class UserServiceImpl implements UserService {
         // token exist from email confirmation
         user.setStatus(true);
         return repository.save(user);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<User> fetchAll() {
-        return repository.findAll();
     }
 
     @Transactional(readOnly = false)
@@ -154,26 +150,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = false)
     @Override
-    public boolean confirmAccount(String tokenUrl) {
-        Integer qtdRows = repository.updateStatusUserByToken(tokenUrl);
-        if (qtdRows > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional(readOnly = false)
-    @Override
     public User updatePassword(NewPasswordInputDTO newPasswordInputDTO) {
         User user = repository.findUserByToken(newPasswordInputDTO.getToken()).orElseThrow(() -> new BusinessRulesException(Feedback.ERROR_PASSWORD_CHANGE));
         user.setPassword(passwordEncoder.encode(newPasswordInputDTO.getNewpassword()));
         return repository.save(user);
-    }
-
-    @Override
-    public Roles findRoleByUsername(String username) {
-        return repository.findRoleByUsername(username);
     }
 
     @Transactional(readOnly = false)

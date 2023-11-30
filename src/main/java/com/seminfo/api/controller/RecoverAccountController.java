@@ -33,7 +33,7 @@ public class RecoverAccountController {
     @PostMapping("/new-password")
     public ResponseEntity<Message> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO) {
         StrongPassword.isStrong(newPasswordInputDTO.getNewpassword());
-        User user = userService.updatePassword(newPasswordInputDTO);
+        userService.updatePassword(newPasswordInputDTO);
         return new ResponseEntity<Message>(new Message(Feedback.OK_PASSWORD_CHANGE), HttpStatus.OK);
     }
 

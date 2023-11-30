@@ -1,18 +1,15 @@
 package com.seminfo.domain.service;
 
 import com.seminfo.api.dto.password.NewPasswordInputDTO;
-import com.seminfo.domain.enums.Roles;
 import com.seminfo.domain.model.User;
 
 import java.util.Date;
-import java.util.List;
 
 public interface UserService {
-    public void save(User user);
+
+    public User save(User user);
 
     public User saveUserAfterConfirmedAccountByEmail(String token);
-
-    public List<User> fetchAll();
 
     public User login(User user);
 
@@ -38,7 +35,4 @@ public interface UserService {
 
     public User updatePassword(NewPasswordInputDTO newPasswordInputDTO);
 
-    public Roles findRoleByUsername(String username);
-
-    public boolean confirmAccount(String tokenUrl);
 }

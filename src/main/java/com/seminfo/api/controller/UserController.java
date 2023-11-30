@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping(value = "/user", produces = {"application/json"})
 public class UserController {
@@ -29,8 +28,9 @@ public class UserController {
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Message> newUser(@RequestBody @Valid UserInputDTO userInputDto) {
         StrongPassword.isStrong(userInputDto.getPassword());
-        service.save(UserMapper.mapperUserInputDTOToUser(userInputDto));
-        return new ResponseEntity<Message>(new Message(Feedback.SUCCESS_CREATE_USER),HttpStatus.CREATED);
+        User user = service.save(UserMapper.mapperUserInputDTOToUser(userInputDto));
+        emailSenderService.sendEmail(user.getEmail(), user.getToken());
+        return new ResponseEntity<Message>(new Message(Feedback.SEND_CONF_EMAIL + user.getEmail()), HttpStatus.CREATED);
     }
 
     @GetMapping("/find/{idUser}")
