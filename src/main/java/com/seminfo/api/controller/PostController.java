@@ -2,8 +2,8 @@ package com.seminfo.api.controller;
 
 import com.seminfo.api.dto.others.Message;
 import com.seminfo.api.dto.others.PaginationPost;
-import com.seminfo.api.dto.PostInputDTO;
-import com.seminfo.api.dto.PostOutputDTO;
+import com.seminfo.api.dto.post.PostInputDTO;
+import com.seminfo.api.dto.post.PostOutputDTO;
 import com.seminfo.api.mapper.PostMapper;
 import com.seminfo.domain.model.Post;
 import com.seminfo.domain.service.PostService;
@@ -49,32 +49,14 @@ public class PostController {
 
     @PostMapping("/new")
     public ResponseEntity<Message> newPost(@RequestBody @Valid PostInputDTO postInputDTO) {
-        Message message = new Message();
-        HttpStatus status = null;
-
-        if (service.save(PostMapper.mapperPostInputDTOToPost(postInputDTO)) != null) {
-            message.setMessage(Feedback.POST_COMPLETED);
-            status = HttpStatus.CREATED;
-        } else {
-            message.setMessage(Feedback.ERROR_POST);
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<Message>(message, status);
+        service.save(PostMapper.mapperPostInputDTOToPost(postInputDTO));
+        return new ResponseEntity<Message>(new Message(Feedback.POST_COMPLETED), HttpStatus.CREATED);
     }
 
     @GetMapping("/read-post/{idPost}")
     @ResponseBody
     public ResponseEntity<PostOutputDTO> readPost(@PathVariable Long idPost) {
-        HttpStatus status = null;
-        Post post = service.findPostById(idPost);
-        PostOutputDTO postOutputDTO = null;
-        if (post != null) {
-            status = HttpStatus.OK;
-            postOutputDTO = PostMapper.mapperPostToPostOutputDTO(post);
-        } else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<PostOutputDTO>(postOutputDTO, status);
+      return ResponseEntity.ok(PostMapper.mapperPostToPostOutputDTO(service.findPostById(idPost)));
     }
 
 }

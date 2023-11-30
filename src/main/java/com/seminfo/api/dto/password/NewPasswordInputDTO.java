@@ -1,4 +1,4 @@
-package com.seminfo.api.dto;
+package com.seminfo.api.dto.password;
 
 import com.seminfo.utils.Field;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package com.seminfo.api.dto.others;
+package com.seminfo.api.apiException;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+@AllArgsConstructor
+public class Field {
+    private String nameField;
     private String message;
 }

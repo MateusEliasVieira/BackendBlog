@@ -1,8 +1,7 @@
 package com.seminfo.api.mapper;
 
-import com.seminfo.api.dto.PostInputDTO;
-import com.seminfo.api.dto.PostOutputDTO;
-import com.seminfo.api.dto.UserOutputDTO;
+import com.seminfo.api.dto.post.PostInputDTO;
+import com.seminfo.api.dto.post.PostOutputDTO;
 import com.seminfo.domain.model.Post;
 import org.modelmapper.ModelMapper;
 

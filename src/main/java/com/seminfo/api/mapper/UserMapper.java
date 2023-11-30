@@ -1,7 +1,7 @@
 package com.seminfo.api.mapper;
 
-import com.seminfo.api.dto.UserInputDTO;
-import com.seminfo.api.dto.UserOutputDTO;
+import com.seminfo.api.dto.user.UserInputDTO;
+import com.seminfo.api.dto.user.UserOutputDTO;
 import com.seminfo.domain.model.User;
 import org.modelmapper.ModelMapper;
 

@@ -68,7 +68,7 @@ public class WebFilterConfiguration {
 				.requestMatchers(HttpMethod.GET, "/email/confirmation/*").permitAll()
 				// Recover Account Controller
 				.requestMatchers(HttpMethod.GET, "/recover/recover-account/*").permitAll()
-				.requestMatchers(HttpMethod.POST, "/recover/new-password").hasAuthority(Roles.ROLE_USER.name())
+				.requestMatchers(HttpMethod.POST, "/recover/new-password").permitAll()
 				// User Controller
 				.requestMatchers(HttpMethod.POST, "/user/new").permitAll()
 				.requestMatchers(HttpMethod.GET, "/user/find/*").hasAuthority(Roles.ROLE_USER.name())

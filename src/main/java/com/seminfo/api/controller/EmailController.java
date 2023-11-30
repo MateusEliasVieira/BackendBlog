@@ -20,19 +20,12 @@ public class EmailController {
 
     @GetMapping("/confirmation/{token}")
     public ResponseEntity<Message> confirmMyCountByReceiveEmail(@PathVariable("token") String token) {
-        Message message = new Message();
         // Decode the string Base64
         byte[] decodedBytes = Base64.getDecoder().decode(token);
         String tokenDecodedString = new String(decodedBytes);
-        User userConfirmed = service.saveUserAfterConfirmedAccountByEmail(tokenDecodedString);
-        if (userConfirmed != null) {
-            // saved
-            message.setMessage(Feedback.ACCOUNT_CONFIRMED);
-            return new ResponseEntity<Message>(message, HttpStatus.OK);
-        } else {
-            message.setMessage(Feedback.ERROR_ACCOUNT_CONFIRMED);
-            return new ResponseEntity<Message>(message, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        service.saveUserAfterConfirmedAccountByEmail(tokenDecodedString);
+        // saved
+        return new ResponseEntity<Message>(new Message(Feedback.ACCOUNT_CONFIRMED), HttpStatus.OK);
     }
 
 

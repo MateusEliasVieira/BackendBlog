@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -31,7 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public User findUserByUsername(@Param("username") String username);
 
     @Query("SELECT u FROM User u WHERE u.token = :token")
-    public User findUserByToken(@Param("token") String token);
+    public Optional<User> findUserByToken(@Param("token") String token);
 
     @Modifying
     @Query("UPDATE User u SET u.attempts = :attempts WHERE u.username = :username")

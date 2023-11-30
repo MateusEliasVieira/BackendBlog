@@ -1,7 +1,7 @@
 package com.seminfo.utils;
 
 public class Field {
-
+    public static final String DEFAULT_MESSAGE_EXCEPTION = "Existem campos não fornecidos corretamente!";
     public static final String NAME_MESSAGE = "O nome não pode estar em branco";
     public static final String NAME_SIZE_MESSAGE = "O nome deve ter pelo menos 4 letras";
     public static final String FIRST_LETTER_NAME_MESSAGE = "A primeira letra deve ser maiúscula";

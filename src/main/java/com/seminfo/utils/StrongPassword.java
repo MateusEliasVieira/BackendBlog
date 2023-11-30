@@ -1,8 +1,10 @@
 package com.seminfo.utils;
 
+import com.seminfo.domain.domainException.BusinessRulesException;
+
 public class StrongPassword {
 
-    public static boolean isStrong(String password) {
+    public static void isStrong(String password) {
         int countLetter = 0;
         int countSpecialCharacters = 0;
         int countNumbers = 0;
@@ -25,10 +27,8 @@ public class StrongPassword {
             }
         }
 
-        if (countLetter >= 2 && countSpecialCharacters >= 2 && countNumbers >= 2) {
-            return true;
-        } else {
-            return false;
+        if (!(countLetter >= 2 && countSpecialCharacters >= 2 && countNumbers >= 2)) {
+            throw new BusinessRulesException(Feedback.WEAK_PASSWORD);
         }
 
     }

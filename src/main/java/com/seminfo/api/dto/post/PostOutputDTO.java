@@ -1,5 +1,6 @@
-package com.seminfo.api.dto;
+package com.seminfo.api.dto.post;
 
+import com.seminfo.api.dto.user.UserOutputDTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

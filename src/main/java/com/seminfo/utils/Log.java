@@ -1,7 +1,7 @@
 package com.seminfo.utils;
 
-import com.seminfo.api.dto.LoginInputDTO;
-import com.seminfo.api.dto.LoginInputGoogleDTO;
+import com.seminfo.api.dto.login.LoginInputDTO;
+import com.seminfo.api.dto.login.LoginInputGoogleDTO;
 import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;

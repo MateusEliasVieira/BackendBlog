@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostService {
-    public Post save(Post post);
+    public void save(Post post);
 
     public List<Post> fetchAll();
 

@@ -1,8 +1,8 @@
 package com.seminfo.api.controller;
 
-import com.seminfo.api.dto.LoginInputDTO;
-import com.seminfo.api.dto.LoginInputGoogleDTO;
-import com.seminfo.api.dto.LoginOutputDTO;
+import com.seminfo.api.dto.login.LoginInputDTO;
+import com.seminfo.api.dto.login.LoginInputGoogleDTO;
+import com.seminfo.api.dto.login.LoginOutputDTO;
 import com.seminfo.api.dto.others.Message;
 import com.seminfo.api.mapper.LoginMapper;
 import com.seminfo.domain.model.User;
@@ -68,9 +68,7 @@ public class LoginController {
                     message.setMessage(Feedback.EXHAUSTED_ATTEMPTS + FormatDate.formatMyDate(releaseDate));
                     return new ResponseEntity<Message>(message, HttpStatus.LOCKED);
                 }
-
             }
-
         }
         message.setMessage(Feedback.INVALID_LOGIN);
         return new ResponseEntity<Message>(message, HttpStatus.NOT_ACCEPTABLE);
@@ -78,20 +76,16 @@ public class LoginController {
 
     private ResponseEntity<?> processLogin(LoginInputDTO loginInputDTO) {
         try {
-
             var usernamePassword = new UsernamePasswordAuthenticationToken(loginInputDTO.getUsername(), loginInputDTO.getPassword());
             var auth = authenticationManager.authenticate(usernamePassword);
-
             // check login
             if (auth.isAuthenticated()) {
                 // register login
                 User loggedInUser = service.login((User) auth.getPrincipal());
-
                 if (loggedInUser.isStatus()) {
                     // User active
                     return new ResponseEntity<LoginOutputDTO>(LoginMapper.mapperUserToLoginOutputDTO(loggedInUser), HttpStatus.ACCEPTED);
                 }
-
             }
         } catch (AuthenticationException e) {
             // increment attempts
@@ -105,14 +99,11 @@ public class LoginController {
     public ResponseEntity<LoginOutputDTO> enterWithGoogle(@RequestBody @Valid LoginInputGoogleDTO loginInputGoogleDTO, HttpServletRequest request) {
         // creates a log of the login request
         Log.createGoogleLog(loginInputGoogleDTO, request);
-
         User user = LoginMapper.mapperLoginInputGoogleDTOToUser(loginInputGoogleDTO);
         User loggedInUser = service.loginWithGoogle(user);
         if (loggedInUser != null && loggedInUser.isStatus()) {
             // Exist email and password // status is true
-
             LoginOutputDTO loginOutputDTO = new LoginOutputDTO(loggedInUser.getIdUser(), loggedInUser.getToken(), loggedInUser.getRole());
-
             return new ResponseEntity<LoginOutputDTO>(loginOutputDTO, HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<LoginOutputDTO>((LoginOutputDTO) null, HttpStatus.NO_CONTENT);

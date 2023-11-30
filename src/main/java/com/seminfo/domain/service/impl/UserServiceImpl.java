@@ -1,13 +1,14 @@
 package com.seminfo.domain.service.impl;
 
 
-import com.seminfo.api.dto.NewPasswordInputDTO;
+import com.seminfo.api.dto.password.NewPasswordInputDTO;
+import com.seminfo.domain.domainException.BusinessRulesException;
 import com.seminfo.domain.enums.Roles;
-import com.seminfo.domain.exception.UserNotFoundException;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.repository.UserRepository;
 import com.seminfo.domain.service.UserService;
 import com.seminfo.security.jwt.JwtToken;
+import com.seminfo.utils.Feedback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = false)
     @Override
-    public User save(User user) {
+    public void save(User user) {
         if (repository.findUserByEmail(user.getEmail()) == null && repository.findUserByUsername(user.getUsername()) == null) {
             // empty user
             String firstTokenUser = JwtToken.generateTokenJWT(user);
@@ -40,23 +41,22 @@ public class UserServiceImpl implements UserService {
             user.setStatus(false);
             user.setRole(Roles.ROLE_USER);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return repository.save(user);
+            User userSaved = repository.save(user);
+            if(userSaved.getIdUser() == null){
+                throw new BusinessRulesException(Feedback.ERROR_CREATE_USER + user.getName());
+            }
         } else {
-            return null;
+            throw new BusinessRulesException(Feedback.USER_EXIST);
         }
     }
 
     @Transactional(readOnly = false)
     @Override
     public User saveUserAfterConfirmedAccountByEmail(String token) {
-        User user = repository.findUserByToken(token);
-        if (user != null) {
-            // token exist from email confirmation
-            user.setStatus(true);
-            return repository.save(user);
-        } else {
-            return null;
-        }
+        User user = repository.findUserByToken(token).orElseThrow(() -> new BusinessRulesException(Feedback.ERROR_CONFIRMATION_ACCOUNT));
+        // token exist from email confirmation
+        user.setStatus(true);
+        return repository.save(user);
     }
 
     @Transactional(readOnly = true)
@@ -90,15 +90,14 @@ public class UserServiceImpl implements UserService {
             userLoginWithGoogle.setToken(JwtToken.generateTokenJWT(userLoginWithGoogle));
             return repository.save(userLoginWithGoogle);
         }
-
-        return null;
+        throw new BusinessRulesException(Feedback.INVALID_LOGIN_BY_GOOGLE);
     }
 
     @Transactional(readOnly = true)
     @Override
     public User findUser(Long idUser) {
         Optional<User> userOptional = repository.findById(idUser);
-        return userOptional.isPresent() ? userOptional.get() : userOptional.orElseThrow(() -> new UserNotFoundException("User not found!"));
+        return userOptional.orElseThrow(() -> new BusinessRulesException(Feedback.NOT_EXIST_USER_ID + idUser));
     }
 
     @Transactional(readOnly = true)
@@ -167,7 +166,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = false)
     @Override
     public User updatePassword(NewPasswordInputDTO newPasswordInputDTO) {
-        User user = repository.findUserByToken(newPasswordInputDTO.getToken());
+        User user = repository.findUserByToken(newPasswordInputDTO.getToken()).orElseThrow(() -> new BusinessRulesException(Feedback.ERROR_PASSWORD_CHANGE));
         user.setPassword(passwordEncoder.encode(newPasswordInputDTO.getNewpassword()));
         return repository.save(user);
     }

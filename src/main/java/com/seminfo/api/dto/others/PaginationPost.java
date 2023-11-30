@@ -1,6 +1,6 @@
 package com.seminfo.api.dto.others;
 
-import com.seminfo.api.dto.PostOutputDTO;
+import com.seminfo.api.dto.post.PostOutputDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

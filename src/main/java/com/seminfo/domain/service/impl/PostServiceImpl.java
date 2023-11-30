@@ -1,8 +1,10 @@
 package com.seminfo.domain.service.impl;
 
+import com.seminfo.domain.domainException.BusinessRulesException;
 import com.seminfo.domain.model.Post;
 import com.seminfo.domain.repository.PostRepository;
 import com.seminfo.domain.service.PostService;
+import com.seminfo.utils.Feedback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -23,8 +25,11 @@ public class PostServiceImpl implements PostService {
 
     @Transactional(readOnly = false)
     @Override
-    public Post save(Post post) {
-        return repository.save(post);
+    public void save(Post post) {
+        Post postSaved = repository.save(post);
+        if (postSaved.getIdPost() == null) {
+            throw new BusinessRulesException(Feedback.ERROR_CREATE_POST);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -46,11 +51,6 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     @Override
     public Post findPostById(Long idPost) {
-        Optional<Post> optional = repository.findById(idPost);
-        if (optional.isPresent()) {
-            return optional.get();
-        } else {
-            return null;
-        }
+        return repository.findById(idPost).orElseThrow(() -> new BusinessRulesException(Feedback.NOT_EXIST_POST_ID + idPost));
     }
 }

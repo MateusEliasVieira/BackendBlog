@@ -1,4 +1,4 @@
-package com.seminfo.api.dto;
+package com.seminfo.api.dto.post;
 
 import com.seminfo.domain.model.User;
 import com.seminfo.utils.Field;

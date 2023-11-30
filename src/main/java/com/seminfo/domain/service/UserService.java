@@ -1,16 +1,14 @@
 package com.seminfo.domain.service;
 
-import com.seminfo.api.dto.LoginInputDTO;
-import com.seminfo.api.dto.NewPasswordInputDTO;
+import com.seminfo.api.dto.password.NewPasswordInputDTO;
 import com.seminfo.domain.enums.Roles;
 import com.seminfo.domain.model.User;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
 import java.util.List;
 
 public interface UserService {
-    public User save(User user);
+    public void save(User user);
 
     public User saveUserAfterConfirmedAccountByEmail(String token);
 

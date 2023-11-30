@@ -1,4 +1,4 @@
-package com.seminfo.api.dto;
+package com.seminfo.api.dto.login;
 
 import com.seminfo.domain.enums.Roles;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,7 @@
 package com.seminfo.api.controller;
 
-import com.seminfo.api.dto.NewPasswordInputDTO;
-import com.seminfo.api.mapper.UserMapper;
+import com.seminfo.api.dto.others.Message;
+import com.seminfo.api.dto.password.NewPasswordInputDTO;
 import com.seminfo.domain.model.User;
 import com.seminfo.domain.service.EmailSenderService;
 import com.seminfo.domain.service.UserService;
@@ -25,34 +25,16 @@ public class RecoverAccountController {
     private UserService userService;
 
     @GetMapping("/recover-account/{email}")
-    public ResponseEntity<String> recoverAccount(@PathVariable("email") @Email String email) {
-        try {
-            if (emailSenderService.recoverAccount(email)) {
-                return new ResponseEntity<String>(Feedback.ACCOUNT_RECOVER_SENT, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<String>(Feedback.EMPTY_USER, HttpStatus.NOT_ACCEPTABLE);
-            }
-        } catch (MessagingException e) {
-            return new ResponseEntity<String>(Feedback.ERROR_ACCOUNT_RECOVER, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Message> recoverAccount(@PathVariable("email") @Email String email) {
+        emailSenderService.recoverAccount(email);
+        return new ResponseEntity<Message>(new Message(Feedback.ACCOUNT_RECOVER_SENT), HttpStatus.OK);
     }
 
     @PostMapping("/new-password")
-    public ResponseEntity<String> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO) {
-        if (StrongPassword.isStrong(newPasswordInputDTO.getNewpassword())) {
-            // password is strong
-            User user = userService.updatePassword(newPasswordInputDTO);
-
-            if (user != null) {
-                return new ResponseEntity<String>(Feedback.OK_PASSWORD_CHANGE, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<String>(Feedback.ERROR_PASSWORD_CHANGE, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        } else {
-            // password not strong
-            return new ResponseEntity<String>(Feedback.WEAK_PASSWORD, HttpStatus.NOT_ACCEPTABLE);
-        }
-
+    public ResponseEntity<Message> newPassword(@RequestBody NewPasswordInputDTO newPasswordInputDTO) {
+        StrongPassword.isStrong(newPasswordInputDTO.getNewpassword());
+        User user = userService.updatePassword(newPasswordInputDTO);
+        return new ResponseEntity<Message>(new Message(Feedback.OK_PASSWORD_CHANGE), HttpStatus.OK);
     }
 
 
