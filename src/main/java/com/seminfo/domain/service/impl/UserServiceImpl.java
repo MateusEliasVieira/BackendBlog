@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
             user.setToken(firstTokenUser);
             user.setStatus(true);
             user.setRole(Roles.ROLE_USER);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return repository.save(user);
         } else if (passwordEncoder.matches(user.getPassword(), userLoginWithGoogle.getPassword())) {
             // exist user. Update Token
